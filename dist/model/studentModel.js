@@ -1,7 +1,14 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+'use strict';
 
-let StudentSchema = new Schema({
+var _mongoose = require('mongoose');
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Schema = _mongoose2.default.Schema;
+
+var StudentSchema = new Schema({
     firstName: {
         type: String,
         required: true
@@ -26,4 +33,5 @@ let StudentSchema = new Schema({
     }]
 });
 
-module.exports = mongoose.model('Student', StudentSchema);
+module.exports = _mongoose2.default.model('Student', StudentSchema);
+//# sourceMappingURL=studentModel.js.map

@@ -8,12 +8,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 
-var SchoolSchema = new Schema({
-    hubName: String,
-    classRooms: [{
-        type: Schema.ObjectId,
-        ref: 'Classroom'
-    }],
+var ClassroomSchema = new Schema({
+    roomName: {
+        type: String,
+        required: true
+    },
     teachers: [{
         type: Schema.ObjectId,
         ref: 'Teacher'
@@ -24,5 +23,5 @@ var SchoolSchema = new Schema({
     }]
 });
 
-module.exports = _mongoose2.default.model('School', SchoolSchema);
-//# sourceMappingURL=schoolModel.js.map
+module.exports = _mongoose2.default.model('Classroom', ClassroomSchema);
+//# sourceMappingURL=classroomModel.js.map

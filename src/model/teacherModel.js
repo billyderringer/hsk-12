@@ -10,14 +10,18 @@ let TeacherSchema = new Schema({
         type: String,
         required: true
     },
-    classrooms: {
+    school: {
+        type: Schema.ObjectId,
+        ref: 'School'
+    },
+    classrooms: [{
         type: Schema.ObjectId,
         ref: 'Classroom'
-    },
-    students: {
+    }],
+    students: [{
         type: Schema.ObjectId,
         ref: 'Student'
-    }
+    }]
 });
 
 module.exports = mongoose.model('Teacher', TeacherSchema);

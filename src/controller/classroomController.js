@@ -1,69 +1,91 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
+import School from '../model/schoolModel';
 import Classroom from '../model/classroomModel';
+import Teacher from '../model/teacherModel';
 import Student from '../model/studentModel';
 
 export default ({config, db}) => {
     let api = Router();
+    let classroomCount = 0;
 
-    // '/classroom/add' - Create Classroom
-    api.post('/add', (req, res) => {
-        let newClass = new Classroom();
-        newClass.roomName = req.body.roomName;
-        newClass.save(err => {
-            if(err){
+    // '/hub/create' - Create Classroom
+    api.post('/create', (req, res, next) => {
+        let newClassroom = new Classroom();
+        newClassroom.roomName = req.body.roomName;
+        newClassroom.save((err, classroom) => {
+            if (err) {
                 res.send(err);
             }
-            res.json({message: newClass.roomName + ' has been created successfully'})
+            classroom.save(err => {
+                if (err) {
+                    res.send(err);
+                }
+                res.json({message: newClassroom.roomName + ' has been created successfully'});
+                classroomCount++;
+                console.log(classroomCount);
+            });
         });
     });
 
-    // '/classroom' - Read **** May not use
-    api.get('/', (req, res) => {
-        Classroom.find({},(err, classes) =>{
-            if(err){
+    // '/hub' - Read all classrooms
+    api.get('/', (req, res, next) => {
+        Classroom.find({}, (err, classes) => {
+            if (err) {
                 res.send(err);
             }
             res.json(classes);
         });
     });
 
-    // '/classroom/:id' - Read 1
-    api.get('/:id', (req, res) => {
+    // '/hub/:hubId' - Read classroom by id
+    api.get('/:hubId', (req, res) => {
         //.findById method
-        Classroom.findById(req.params.id, (err, classroom) => {
-            if(err){
+        Classroom.findById(req.params.hubId, (err, classroom) => {
+            if (err) {
                 res.send(err);
             }
             res.json(classroom);
         });
     });
 
-    // '/classroom/:id' - Update
-    api.put('/:id', (req, res) => {
-        Classroom.findById(req.params.id, (err, room) => {
-            if(err){
+    // '/hub/update/:hubId' - Update classroom
+    api.put('/update/:hubId', (req, res) => {
+        Classroom.findById(req.params.hubId, (err, classroom) => {
+            if (err) {
                 res.send(err);
             }
-            room.roomName = req.body.roomName;
-            room.save(err => {
-                if(err){
+            classroom.roomName = req.body.roomName;
+            classroom.save(err => {
+                if (err) {
                     res.send(err);
                 }
-                res.json({message: room.roomName + ' info updated'});
+                res.json({message: classroom.roomName + ' info updated'});
             });
         });
     });
 
-    // '/classroom/:id' - Delete
-    api.delete('/:id', (req, res) => {
+    // '/hub/remove/:id' - Delete classroom
+    api.delete('/remove/:id', (req, res) => {
         Classroom.remove({_id: req.params.id}, (err, deletedClass) => {
-            if(err){
+            if (err) {
                 res.send(err);
             }
-            res.json({message: "Classroom successfully removed"});
+            let id = deletedClass.teachers;
+            Teacher.remove(id, (err, teachers) => {
+                if (err) {
+                    res.send(err);
+                }
+            });
+            id = deletedClass.students;
+            Student.remove(id, (err, students) => {
+                if (err) {
+                    res.send(err);
+                }
+                res.json({message: "Classroom successfully removed"});
+            });
         });
     });
 
-return api;
+    return api;
 }
