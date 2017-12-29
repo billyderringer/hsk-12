@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import School from '../model/schoolModel';
-import Classroom from '../model/classroomModel';
+import School from '../model/hubModel';
+import Classroom from '../model/homeroomModel';
 import Teacher from '../model/teacherModel';
 import Student from '../model/studentModel';
 

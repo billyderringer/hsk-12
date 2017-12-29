@@ -48,7 +48,7 @@ var router = (0, _express2.default)();
     router.use((0, _middleware2.default)({ config: _config2.default, db: db }));
 
     //api routes
-    //router.use('/hub', School({config, db}));
+    //router.use('/hub', Hub({config, db}));
     router.use('/hub', (0, _classroomController2.default)({ config: _config2.default, db: db }));
     router.use('/teachers', (0, _teacherController2.default)({ config: _config2.default, db: db }));
     router.use('/students', (0, _studentController2.default)({ config: _config2.default, db: db }));

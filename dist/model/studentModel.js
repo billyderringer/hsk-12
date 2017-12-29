@@ -21,7 +21,7 @@ var StudentSchema = new Schema({
     gradingScale: String,
     school: {
         type: Schema.ObjectId,
-        ref: 'School'
+        ref: 'Hub'
     },
     classRooms: [{
         type: Schema.ObjectId,

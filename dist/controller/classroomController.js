@@ -115,4 +115,4 @@ exports.default = function (_ref) {
 
     return api;
 };
-//# sourceMappingURL=classroomController.js.map
+//# sourceMappingURL=homeroomController.js.map

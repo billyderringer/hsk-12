@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
 
-let SchoolSchema = new Schema({
-    hubName: String,
-    classRooms: [{
+let HomeroomSchema = new Schema({
+    roomName: {
+        type: String,
+        required: true
+    },
+    hub: [{
         type: Schema.ObjectId,
-        ref: 'Classroom'
+        ref: 'Hub'
     }],
     teachers: [{
         type: Schema.ObjectId,
@@ -17,4 +20,4 @@ let SchoolSchema = new Schema({
     }]
 });
 
-module.exports = mongoose.model('School', SchoolSchema);
+module.exports = mongoose.model('Homeroom', HomeroomSchema);

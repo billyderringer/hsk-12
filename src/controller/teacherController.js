@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import School from '../model/schoolModel';
-import Classroom from '../model/classroomModel';
+import School from '../model/hubModel';
+import Classroom from '../model/homeroomModel';
 import Teacher from '../model/teacherModel';
 import Student from '../model/studentModel';
 
@@ -10,20 +10,20 @@ export default ({config, db}) => {
 
     // '/classroom/teachers/add/:id' - Create new teachers
     api.post('/add/:id', (req, res) => {
-        School.findById(req.params.id, (err, school) => {
+        Hub.findById(req.params.id, (err, hub) => {
             if (err) {
                 res.send(err);
             }
             let newTeacher = new Teacher();
             newTeacher.firstName = req.body.firstName;
             newTeacher.lastName = req.body.lastName;
-            newTeacher.school = school._id;
+            newTeacher.hub = hub._id;
             newTeacher.save((err, teacher) => {
                 if (err) {
                     res.send(err);
                 }
-                school.teachers.push(newTeacher);
-                school.save(err => {
+                hub.teachers.push(newTeacher);
+                hub.save(err => {
                     if(err){
                         res.send(err);
                     }

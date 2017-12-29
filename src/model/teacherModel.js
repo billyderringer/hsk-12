@@ -10,13 +10,13 @@ let TeacherSchema = new Schema({
         type: String,
         required: true
     },
-    school: {
+    hub: {
         type: Schema.ObjectId,
-        ref: 'School'
+        ref: 'Hub',
     },
-    classrooms: [{
+    homerooms: [{
         type: Schema.ObjectId,
-        ref: 'Classroom'
+        ref: 'Homeroom'
     }],
     students: [{
         type: Schema.ObjectId,

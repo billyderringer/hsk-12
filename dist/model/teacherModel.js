@@ -19,7 +19,7 @@ var TeacherSchema = new Schema({
     },
     school: {
         type: Schema.ObjectId,
-        ref: 'School'
+        ref: 'Hub'
     },
     classrooms: [{
         type: Schema.ObjectId,
