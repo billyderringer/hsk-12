@@ -11,8 +11,7 @@ export default ({config, db}) => {
 
     // '/teacher/create/:roomId' - Create new teachers
     api.post('/create/:roomId', (req, res) => {
-        let room = req.params.roomId;
-        Homeroom.findById(room, (err, homeroom) => {
+        Homeroom.findById(req.params.roomId, (err, homeroom) => {
             if (err) {
                 res.send(err);
             }
@@ -20,7 +19,18 @@ export default ({config, db}) => {
             newTeacher.firstName = req.body.firstName;
             newTeacher.lastName = req.body.lastName;
             newTeacher.homerooms = req.params.roomId;
-            newTeacher.hub = room.hub;
+            newTeacher.hub = homeroom.hub;
+            Hub.findById(newTeacher.hub, (err, hub) => {
+                if(err){
+                    res.send(err);
+                }
+                hub.teachers.push(newTeacher);
+                hub.save(err => {
+                    if(err){
+                        res.send(err);
+                    }
+                });
+            });
             newTeacher.save((err, teacher) => {
                 if (err) {
                     res.send(err);
@@ -101,8 +111,11 @@ export default ({config, db}) => {
                 res.send(err);
             }
             let name = teacher.firstName + ' ' + teacher.lastName;
-            let id = teacher.rooms;
+            let id = teacher.hub;
             Hub.findById(id, (err, hub) => {
+                if(err){
+                    res.send(err);
+                }
                 hub.teachers.pull(teacher);
                 hub.save(err => {
                     if(err){
@@ -110,7 +123,11 @@ export default ({config, db}) => {
                     }
                 });
             });
+            id = teacher.homerooms;
             Homeroom.findById(id, (err, homeroom) => {
+                if(err){
+                    res.send(err);
+                }
                 homeroom.teachers.pull(teacher);
                 homeroom.save(err => {
                     if (err) {
@@ -118,16 +135,11 @@ export default ({config, db}) => {
                     }
                 });
             });
-            Teacher.remove({_id: req.params.id}, (err, teacher) => {
+            id = teacher;
+            Teacher.remove(id, (err, teacher) => {
                 if (err) {
                     res.send(err);
                 }
-                id = teacher.students;
-                Student.remove(id, err => {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
                 teacherCount--;
                 res.json({message: name + ' successfully removed'});
             });

@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import {Router} from 'express';
 import Hub from '../model/hubModel';
 import Homeroom from '../model/homeroomModel';
+import Teacher from '../model/teacherModel';
+import Student from '../model/studentModel';
 
 export default ({config, db}) => {
     const api = Router();
@@ -60,27 +62,24 @@ export default ({config, db}) => {
             if (err) {
                 res.send(err);
             }
-            //No longer needed?***
-            // ***Probably won't track these in hub***
-            /*let idHomerooms = deletedHub.homerooms;
-            let idTeachers = deletedHub.teachers;
-            let idStudents = deletedHub.students;
-            Homeroom.remove(idHomerooms, err => {
+            let id = deletedHub.homerooms;
+            Homeroom.remove(id, err => {
                 if (err) {
                     res.send(err);
                 }
             });
-
-            Teacher.remove(idTeachers, err => {
+            id = deletedHub.teachers;
+            Teacher.remove(id, err => {
                 if (err) {
                     res.send(err);
                 }
             });
-            Student.remove(idStudents, err => {
+            id = deletedHub.students;
+            Student.remove(id, err => {
                 if (err) {
                     res.send(err);
                 }
-            });*/
+            });
             res.json({message: "Hub successfully removed"});
         });
     });

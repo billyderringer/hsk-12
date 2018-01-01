@@ -11,7 +11,6 @@ let StudentSchema = new Schema({
         required: true
     },
     gradeLevel: Number,
-    gradingScale: String,
     hub: {
         type: Schema.ObjectId,
         ref: 'Hub',
