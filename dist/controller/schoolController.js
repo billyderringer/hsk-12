@@ -34,7 +34,7 @@ exports.default = function (_ref) {
 
     var api = (0, _express.Router)();
 
-    // '/hub/add' - Create new school
+    // '/hub/add' - Create new hub
     api.post('/add', function (req, res) {
         var newHub = new _schoolModel2.default();
         newHub.hubName = req.body.hubName;
@@ -62,7 +62,7 @@ exports.default = function (_ref) {
             if (err) {
                 res.send(err);
             }
-            res.json(school.teachers);
+            res.json(hub.teachers);
         });
     });
 
@@ -72,7 +72,7 @@ exports.default = function (_ref) {
             if (err) {
                 res.send(err);
             }
-            res.json(school.students);
+            res.json(hub.students);
         });
     });
 
@@ -116,7 +116,7 @@ exports.default = function (_ref) {
                     res.send(err);
                 }
             });
-            res.json({ message: "Classroom successfully removed" });
+            res.json({ message: "Homeroom successfully removed" });
         });
     });
 

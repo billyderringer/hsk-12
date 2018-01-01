@@ -35,7 +35,7 @@ exports.default = function (_ref) {
     var api = (0, _express.Router)();
     var classroomCount = 0;
 
-    // '/hub/create' - Create Classroom
+    // '/hub/create' - Create Homeroom
     api.post('/create', function (req, res, next) {
         var newClassroom = new _classroomModel2.default();
         newClassroom.roomName = req.body.roomName;
@@ -108,7 +108,7 @@ exports.default = function (_ref) {
                 if (err) {
                     res.send(err);
                 }
-                res.json({ message: "Classroom successfully removed" });
+                res.json({ message: "Homeroom successfully removed" });
             });
         });
     });

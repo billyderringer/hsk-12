@@ -19,13 +19,13 @@ var StudentSchema = new Schema({
     },
     gradeLevel: Number,
     gradingScale: String,
-    school: {
+    hub: {
         type: Schema.ObjectId,
         ref: 'Hub'
     },
     classRooms: [{
         type: Schema.ObjectId,
-        ref: 'Classroom'
+        ref: 'Homeroom'
     }],
     teachers: [{
         type: Schema.ObjectId,

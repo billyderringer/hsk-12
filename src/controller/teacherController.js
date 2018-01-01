@@ -46,7 +46,7 @@ export default ({config, db}) => {
                         res.send(err);
                     }
                     teacherCount++;
-                    res.json({message: newTeacher.firstName + ' ' + newTeacher.lastName + ' successfully added to ' + homeroom.roomName});
+                    res.json({message: 'Teacher: ' + newTeacher.firstName + ' ' + newTeacher.lastName + ' successfully added to ' + homeroom.roomName});
                 });
             });
         });
@@ -73,6 +73,17 @@ export default ({config, db}) => {
         });
     });
 
+    // '/teacher/:teacherId/students' - Read students by teacherId
+    api.get('/:teacherId/students', (req, res) => {
+        let id = req.params.teacherId;
+        Teacher.find({students: id}, (err, students) => {
+            if (err) {
+                res.send(err);
+            }
+            res.json(students);
+        });
+    });
+
     // '/teacher/:teacherId' - Read teacher by teacherId
     api.get('/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
@@ -84,22 +95,22 @@ export default ({config, db}) => {
     });
 
     // '/teacher/update/:id' - Update teacher
-    api.put('/update/:teacherId', (req, res) => {
+    api.patch('/update/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);
             }
-            if (req.body.firstName !== undefined) {
+            if(req.body.firstName !== undefined) {
                 teacher.firstName = req.body.firstName;
             }
-            if (req.body.lastName !== undefined) {
+            if(req.body.lastName !== undefined) {
                 teacher.lastName = req.body.lastName;
             }
             teacher.save(err => {
                 if (err) {
                     res.send(err);
                 }
-                res.json({message: teacher.firstName + ' ' + teacher.lastName + '\'s info updated successfully'});
+                res.json({message: teacher.firstName + ' ' + teacher.lastName + ': Info updated successfully'});
             });
         });
     });
@@ -111,8 +122,8 @@ export default ({config, db}) => {
                 res.send(err);
             }
             let name = teacher.firstName + ' ' + teacher.lastName;
-            let id = teacher.hub;
-            Hub.findById(id, (err, hub) => {
+            let id = teacher._id;
+            Hub.find({homerooms: id}, (err, hub) => {
                 if(err){
                     res.send(err);
                 }
@@ -123,8 +134,7 @@ export default ({config, db}) => {
                     }
                 });
             });
-            id = teacher.homerooms;
-            Homeroom.findById(id, (err, homeroom) => {
+            Homeroom.find({homerooms: id}, (err, homeroom) => {
                 if(err){
                     res.send(err);
                 }
@@ -135,8 +145,7 @@ export default ({config, db}) => {
                     }
                 });
             });
-            id = teacher;
-            Teacher.remove(id, (err, teacher) => {
+            Teacher.remove(id, err => {
                 if (err) {
                     res.send(err);
                 }

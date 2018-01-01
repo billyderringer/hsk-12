@@ -8,7 +8,7 @@ import Student from '../model/studentModel';
 export default ({config, db}) => {
     const api = Router();
 
-    // '/hub/create' - Create new hub(school)
+    // '/hub/create' - Create new hub(hub)
     api.post('/create', (req, res) => {
         let newHub = new Hub();
         newHub.hubName = req.body.hubName;

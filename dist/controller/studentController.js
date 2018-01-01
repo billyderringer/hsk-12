@@ -45,13 +45,13 @@ exports.default = function (_ref) {
             newStudent.lastName = req.body.lastName;
             newStudent.gradeLevel = req.body.gradeLevel;
             newStudent.gradingScale = req.body.gradingScale;
-            newStudent.school = school._id;
+            newStudent.hub = hub._id;
             newStudent.save(function (err, student) {
                 if (err) {
                     res.send(err);
                 }
-                school.students.push(newStudent);
-                school.save(function (err) {
+                hub.students.push(newStudent);
+                hub.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
@@ -60,7 +60,7 @@ exports.default = function (_ref) {
                     if (err) {
                         res.send(err);
                     }
-                    res.json({ message: 'Student successfully saved to school' });
+                    res.json({ message: 'Student successfully saved to hub' });
                 });
             });
         });

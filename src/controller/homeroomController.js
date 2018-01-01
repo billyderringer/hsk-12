@@ -77,11 +77,12 @@ export default ({config, db}) => {
         });
     });
 
+    // '/homeroom/remove/:roomId' - Remove homeroom
     api.delete('/remove/:roomId', (req, res) => {
-        Homeroom.findById(req.params.roomId, (err, homeroom) => {
+        let id = req.params.roomId;
+        Homeroom.findById(id, (err, homeroom) => {
             let homeroomName = homeroom.roomName;
-            let id = homeroom.hub;
-            Hub.findById(id, (err, hub) => {
+            Hub.find({homerooms: id}, (err, hub) => {
                 if (err) {
                     res.send(err);
                 }

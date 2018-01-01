@@ -12,7 +12,7 @@ var SchoolSchema = new Schema({
     hubName: String,
     classRooms: [{
         type: Schema.ObjectId,
-        ref: 'Classroom'
+        ref: 'Homeroom'
     }],
     teachers: [{
         type: Schema.ObjectId,

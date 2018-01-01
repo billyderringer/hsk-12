@@ -43,13 +43,13 @@ exports.default = function (_ref) {
             var newTeacher = new _teacherModel2.default();
             newTeacher.firstName = req.body.firstName;
             newTeacher.lastName = req.body.lastName;
-            newTeacher.school = school._id;
+            newTeacher.hub = hub._id;
             newTeacher.save(function (err, teacher) {
                 if (err) {
                     res.send(err);
                 }
-                school.teachers.push(newTeacher);
-                school.save(function (err) {
+                hub.teachers.push(newTeacher);
+                hub.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
@@ -58,7 +58,7 @@ exports.default = function (_ref) {
                     if (err) {
                         res.send(err);
                     }
-                    res.json({ message: 'Teacher successfully added to school' });
+                    res.json({ message: 'Teacher successfully added to hub' });
                 });
             });
         });
