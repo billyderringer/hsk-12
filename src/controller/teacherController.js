@@ -94,7 +94,7 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/update/:id' - Update teacher
+    // '/teacher/update/:id' - Update teacher basic info
     api.patch('/update/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
@@ -113,6 +113,32 @@ export default ({config, db}) => {
                 res.json({message: teacher.firstName + ' ' + teacher.lastName + ': Info updated successfully'});
             });
         });
+    });
+
+    // '/teacher/:teacherId/assign/:studentId' - Assign students to teacher
+    api.patch('/:teacherId/assign/:studentId', (req, res) => {
+        Teacher.findById(req.params.teacherId, (err, teacher) => {
+            if(err){
+                res.send(err);
+            }
+            Student.findById(req.params.studentId, (err, student) => {
+                if(err){
+                    res.send(err);
+                }
+                teacher.students.push(student);
+                teacher.save(err => {
+                    if(err){
+                        res.send(err);
+                    }
+                });
+                student.teachers.push(teacher);
+                student.save(err => {
+                    if(err){
+                        res.send(err);
+                    }
+                });
+            })
+        })
     });
 
     // '/teacher/remove/:teacherId' - Delete teacher

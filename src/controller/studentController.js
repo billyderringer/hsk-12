@@ -74,8 +74,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/student/teachers/:studentId' - Read teachers by studentId
-    api.get('/teachers/:studentId', (req, res) => {
+    // '/student/:studentId/teachers' - Read teachers by studentId
+    api.get('/:studentId/teachers', (req, res) => {
         let id = req.params.studentId;
         Student.find({teachers: id}, (err, teachers) => {
             if (err) {
@@ -95,7 +95,7 @@ export default ({config, db}) => {
         });
     });
 
-    // '/student/update/:studentId' - Update student
+    // '/student/update/:studentId' - Update student basic info
     api.patch('/update/:studentId', (req, res) => {
         Student.findById(req.params.studentId, (err, student) => {
             if (err) {
