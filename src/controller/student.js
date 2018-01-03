@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import Hub from '../model/hubModel';
-import Homeroom from '../model/homeroomModel';
-import Teacher from '../model/teacherModel';
-import Student from '../model/studentModel';
+import Hub from '../model/hub';
+import Homeroom from '../model/homeroom';
+import Teacher from '../model/teacher';
+import Student from '../model/student';
 
 export default ({config, db}) => {
     let api = Router();
 
-    // '/student/create/:roomId' - Create new students
-    api.post('/create/:roomId', (req, res) => {
+    // '/student/:roomId' - Create new students
+    api.post('/:roomId', (req, res) => {
         Homeroom.findById(req.params.roomId, (err, homeroom) => {
             if(err){
                 res.send(err);
@@ -53,8 +53,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/student/list' - Read all students
-    api.get('/list', (req, res) => {
+    // '/student/' - Read all students
+    api.get('/', (req, res) => {
         Student.find({}, (err, students) => {
             if(err){
                 res.send(err);
@@ -63,8 +63,8 @@ export default ({config, db}) => {
         })
     });
 
-    // '/student/list/:roomId' - Read students by roomId
-    api.get('/list/:roomId', (req, res) => {
+    // '/student/:roomId' - Read students by roomId
+    api.get('/:roomId', (req, res) => {
         let id = req.params.roomId;
         Student.find({homerooms: id}, (err, students) => {
             if(err){
@@ -95,8 +95,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/student/update/:studentId' - Update student basic info
-    api.patch('/update/:studentId', (req, res) => {
+    // '/student/:studentId' - Update student basic info
+    api.patch('/:studentId', (req, res) => {
         Student.findById(req.params.studentId, (err, student) => {
             if (err) {
                 res.send(err);
@@ -119,8 +119,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/remove/:studentId' - Delete student
-    api.delete('/remove/:studentId', (req, res) => {
+    // '/:studentId' - Delete student
+    api.delete('/:studentId', (req, res) => {
         Student.findById(req.params.studentId, (err, student) => {
             let name = student.firstName + ' ' + lastName;
             let id = student._id;

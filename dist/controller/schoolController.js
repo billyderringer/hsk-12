@@ -122,4 +122,4 @@ exports.default = function (_ref) {
 
     return api;
 };
-//# sourceMappingURL=hubController.js.map
+//# sourceMappingURL=hub.js.map

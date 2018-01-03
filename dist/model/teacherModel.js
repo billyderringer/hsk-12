@@ -32,4 +32,4 @@ var TeacherSchema = new Schema({
 });
 
 module.exports = _mongoose2.default.model('Teacher', TeacherSchema);
-//# sourceMappingURL=teacherModel.js.map
+//# sourceMappingURL=teacher.js.map

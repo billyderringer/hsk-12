@@ -25,4 +25,4 @@ var SchoolSchema = new Schema({
 });
 
 module.exports = _mongoose2.default.model('Hub', SchoolSchema);
-//# sourceMappingURL=hubModel.js.map
+//# sourceMappingURL=hub.js.map

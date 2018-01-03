@@ -68,4 +68,4 @@ exports.default = function (_ref) {
 
     return api;
 };
-//# sourceMappingURL=studentController.js.map
+//# sourceMappingURL=student.js.map

@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import Hub from '../model/hubModel';
-import Homeroom from '../model/homeroomModel';
-import Teacher from '../model/teacherModel';
-import Student from '../model/studentModel';
+import Hub from '../model/hub';
+import Homeroom from '../model/homeroom';
+import Teacher from '../model/teacher';
+import Student from '../model/student';
 
 export default ({config, db}) => {
     let api = Router();
     let homeroomCount = 0;
 
-    // '/homeroom/create/:hubId' - Create new homeroom
-    api.post('/create/:hubId', (req, res) => {
+    // '/homeroom/:hubId' - Create new homeroom
+    api.post('/:hubId', (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
                 res.send(err);
@@ -38,8 +38,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/homeroom/list' - Read all homerooms
-    api.get('/list', (req, res, next) => {
+    // '/homeroom/' - Read all homerooms
+    api.get('/', (req, res, next) => {
         Homeroom.find({}, (err, homeroom) => {
             if (err) {
                 res.send(err);
@@ -59,8 +59,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/homeroom/update/:roomId' - Update homeroom
-    api.put('/update/:roomId', (req, res) => {
+    // '/homeroom/:roomId' - Update homeroom
+    api.put('/:roomId', (req, res) => {
         Homeroom.findById(req.params.roomId, (err, homeroom) => {
             if (err) {
                 res.send(err);
@@ -77,8 +77,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/homeroom/remove/:roomId' - Remove homeroom
-    api.delete('/remove/:roomId', (req, res) => {
+    // '/homeroom/:roomId' - Remove homeroom
+    api.delete('/:roomId', (req, res) => {
         let id = req.params.roomId;
         Homeroom.findById(id, (err, homeroom) => {
             let homeroomName = homeroom.roomName;

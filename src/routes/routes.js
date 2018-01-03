@@ -2,10 +2,10 @@ import express from 'express';
 import config from '../config/config';
 import middleware from '../middleware/middleware';
 import initializeDb from '../db';
-import Hub from '../controller/hubController';
-import Homeroom from '../controller/homeroomController';
-import Teacher from '../controller/teacherController';
-import Student from '../controller/studentController';
+import Hub from '../controller/hub';
+import Homeroom from '../controller/homeroom';
+import Teacher from '../controller/teacher';
+import Student from '../controller/student';
 
 
 let router = express();

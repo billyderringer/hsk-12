@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import Hub from '../model/hubModel';
-import Homeroom from '../model/homeroomModel';
-import Teacher from '../model/teacherModel';
-import Student from '../model/studentModel';
+import Hub from '../model/hub';
+import Homeroom from '../model/homeroom';
+import Teacher from '../model/teacher';
+import Student from '../model/student';
 
 export default ({config, db}) => {
     const api = Router();
 
-    // '/hub/create' - Create new hub(hub)
-    api.post('/create', (req, res) => {
+    // '/hub/' - Create new hub
+    api.post('/', (req, res) => {
         let newHub = new Hub();
         newHub.hubName = req.body.hubName;
         newHub.save(err => {
@@ -20,8 +20,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/hub' - Read all hubs
-    api.get('/list', (req, res) => {
+    // '/hub/' - Read all hubs
+    api.get('/', (req, res) => {
         Hub.find({}, (err, hub) => {
             if (err) {
                 res.send(err);
@@ -40,8 +40,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/hub/update/:hubId' - Update
-    api.put('/update/:hubId', (req, res) => {
+    // '/hub/:hubId' - Update
+    api.put('/:hubId', (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
                 res.send(err);
@@ -56,8 +56,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/hub/remove/:hubId' - Delete
-    api.delete('/remove/:hubId', (req, res) => {
+    // '/hub/:hubId' - Delete
+    api.delete('/:hubId', (req, res) => {
         Hub.remove({_id: req.params.hubId}, (err, deletedHub) => {
             if (err) {
                 res.send(err);

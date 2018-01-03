@@ -143,4 +143,4 @@ exports.default = function (_ref) {
 
     return api;
 };
-//# sourceMappingURL=teacherController.js.map
+//# sourceMappingURL=teacher.js.map

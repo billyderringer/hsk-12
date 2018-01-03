@@ -34,4 +34,4 @@ var StudentSchema = new Schema({
 });
 
 module.exports = _mongoose2.default.model('Student', StudentSchema);
-//# sourceMappingURL=studentModel.js.map
+//# sourceMappingURL=student.js.map

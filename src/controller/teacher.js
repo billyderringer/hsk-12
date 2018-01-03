@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
-import Hub from '../model/hubModel';
-import Homeroom from '../model/homeroomModel';
-import Teacher from '../model/teacherModel';
-import Student from '../model/studentModel';
+import Hub from '../model/hub';
+import Homeroom from '../model/homeroom';
+import Teacher from '../model/teacher';
+import Student from '../model/student';
 
 export default ({config, db}) => {
     let api = Router();
     let teacherCount = 0;
 
-    // '/teacher/create/:roomId' - Create new teachers
-    api.post('/create/:roomId', (req, res) => {
+    // '/teacher/:roomId' - Create new teachers
+    api.post('/:roomId', (req, res) => {
         Homeroom.findById(req.params.roomId, (err, homeroom) => {
             if (err) {
                 res.send(err);
@@ -52,8 +52,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/list' - Read all teachers
-    api.get('/list', (req, res) => {
+    // '/teacher' - Read all teachers
+    api.get('/', (req, res) => {
         Teacher.find({}, (err, teachers) => {
             if (err) {
                 res.send(err);
@@ -62,8 +62,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/list/:roomId' - Read all teachers by classId
-    api.get('/list/:roomId', (req, res) => {
+    // '/teacher/:roomId' - Read all teachers by classId
+    api.get('/:roomId', (req, res) => {
         let id = req.params.roomId;
         Teacher.find({homerooms: id}, (err, teachers) => {
             if (err) {
@@ -94,8 +94,8 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/update/:id' - Update teacher basic info
-    api.patch('/update/:teacherId', (req, res) => {
+    // '/teacher/:id' - Update teacher basic info
+    api.patch('/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);
@@ -116,12 +116,14 @@ export default ({config, db}) => {
     });
 
     // '/teacher/:teacherId/assign/:studentId' - Assign students to teacher
-    api.patch('/:teacherId/assign/:studentId', (req, res) => {
+    api.post('/:teacherId/assign/:studentId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
+            let teacherName = teacher.firstName + ' ' + teacher.lastName;
             if(err){
                 res.send(err);
             }
             Student.findById(req.params.studentId, (err, student) => {
+                let studentName = student.firstName + ' ' + student.lastName;
                 if(err){
                     res.send(err);
                 }
@@ -137,12 +139,42 @@ export default ({config, db}) => {
                         res.send(err);
                     }
                 });
-            })
-        })
+                res.json({message: studentName + ' successfully assigned to ' + teacherName});
+            });
+        });
     });
 
-    // '/teacher/remove/:teacherId' - Delete teacher
-    api.delete('/remove/:teacherId', (req, res) => {
+    // '/teacher/:teacherId/remove/:studentId' Remove student from teacher
+    api.delete('/:teacherId/remove/:studentId', (req, res) => {
+        Teacher.findById(req.params.teacherId, (err, teacher) => {
+            let teacherName = teacher.firstName + ' ' + teacher.lastName;
+            if(err){
+                res.send(err);
+            }
+            Student.findById(req.params.studentId, (err, student) => {
+                let studentName = student.firstName + ' ' + student.lastName;
+                if(err){
+                    res.send(err);
+                }
+                teacher.students.pull(student);
+                teacher.save(err => {
+                    if(err){
+                        res.send(err);
+                    }
+                });
+                student.teachers.pull(teacher);
+                student.save(err => {
+                    if(err){
+                        res.send(err);
+                    }
+                });
+                res.json({message: studentName + ' successfully removed from ' + teacherName});
+            });
+        });
+    });
+
+    // '/teacher/:teacherId' - Delete teacher
+    api.delete('/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);

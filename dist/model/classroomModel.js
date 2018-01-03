@@ -24,4 +24,4 @@ var ClassroomSchema = new Schema({
 });
 
 module.exports = _mongoose2.default.model('Homeroom', ClassroomSchema);
-//# sourceMappingURL=homeroomModel.js.map
+//# sourceMappingURL=homeroom.js.map
