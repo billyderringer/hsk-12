@@ -120,43 +120,41 @@ export default ({config, db}) => {
     });
 
     // '/:studentId' - Delete student
-    api.delete('/:studentId', (req, res) => {
+    api.delete('/remove/:studentId', (req, res) => {
+        let id = req.params.studentId;
         Student.findById(req.params.studentId, (err, student) => {
-            let name = student.firstName + ' ' + lastName;
-            let id = student._id;
+
             if(err){
                 res.send(err);
             }
-            Hub.find({students: id}, (err, hub) => {
-                hub.pull(student);
+            Hub.findById(student.hub, (err, hub) => {
+                if(err){
+                    res.send(err);
+                }
+                hub.students.pull(student);
                 hub.save(err => {
                     if(err){
                         res.send(err);
                     }
                 });
             });
-            Homeroom.find({students: id}, (err, room) => {
-                room.pull(student);
+            Homeroom.findById(student.homerooms, (err, room) => {
+                if(err){
+                    res.send(err);
+                }
+                room.students.pull(student);
                 room.save(err => {
                     if(err){
                         res.send(err);
                     }
                 });
             });
-            Teacher.find({students: id}, (err, teacher) => {
-                teacher.pull(student);
-                teacher.save(err => {
-                    if(err){
-                        res.send(err);
-                    }
-                });
-            });
-            Student.remove(id, err => {
+            Student.remove(student, err => {
                 if(err){
                     res.send(err);
                 }
+                res.json({message: "Student successfully removed"});
             });
-            res.json({message: 'Student: ' + name + ' successfully removed'});
         });
     });
 

@@ -95,7 +95,7 @@ export default ({config, db}) => {
     });
 
     // '/teacher/:id' - Update teacher basic info
-    api.patch('/:teacherId', (req, res) => {
+    api.patch('/update/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);
@@ -144,44 +144,13 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/:teacherId/remove/:studentId' Remove student from teacher
-    api.delete('/:teacherId/remove/:studentId', (req, res) => {
-        Teacher.findById(req.params.teacherId, (err, teacher) => {
-            let teacherName = teacher.firstName + ' ' + teacher.lastName;
-            if(err){
-                res.send(err);
-            }
-            Student.findById(req.params.studentId, (err, student) => {
-                let studentName = student.firstName + ' ' + student.lastName;
-                if(err){
-                    res.send(err);
-                }
-                teacher.students.pull(student);
-                teacher.save(err => {
-                    if(err){
-                        res.send(err);
-                    }
-                });
-                student.teachers.pull(teacher);
-                student.save(err => {
-                    if(err){
-                        res.send(err);
-                    }
-                });
-                res.json({message: studentName + ' successfully removed from ' + teacherName});
-            });
-        });
-    });
-
     // '/teacher/:teacherId' - Delete teacher
-    api.delete('/:teacherId', (req, res) => {
+    api.delete('/remove/:teacherId', (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);
             }
-            let name = teacher.firstName + ' ' + teacher.lastName;
-            let id = teacher._id;
-            Hub.find({homerooms: id}, (err, hub) => {
+            Hub.findById(teacher.hub, (err, hub) => {
                 if(err){
                     res.send(err);
                 }
@@ -192,23 +161,23 @@ export default ({config, db}) => {
                     }
                 });
             });
-            Homeroom.find({homerooms: id}, (err, homeroom) => {
+            Homeroom.findById(teacher.homerooms, (err, homeroom) => {
                 if(err){
                     res.send(err);
                 }
                 homeroom.teachers.pull(teacher);
                 homeroom.save(err => {
-                    if (err) {
+                    if(err){
                         res.send(err);
                     }
                 });
             });
-            Teacher.remove(id, err => {
+
+            Teacher.remove(teacher, err => {
                 if (err) {
                     res.send(err);
                 }
-                teacherCount--;
-                res.json({message: name + ' successfully removed'});
+                res.json({message: "Teacher successfully removed"});
             });
         });
     });

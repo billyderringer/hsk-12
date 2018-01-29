@@ -8,8 +8,8 @@ import Student from '../model/student';
 export default ({config, db}) => {
     const api = Router();
 
-    // '/hub/' - Create new hub
-    api.post('/', (req, res) => {
+    // '/hub/create' - Create new hub
+    api.post('/create', (req, res) => {
         let newHub = new Hub();
         newHub.hubName = req.body.hubName;
         newHub.save(err => {
@@ -41,7 +41,7 @@ export default ({config, db}) => {
     });
 
     // '/hub/:hubId' - Update
-    api.put('/:hubId', (req, res) => {
+    api.put('/update/:hubId', (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
                 res.send(err);
@@ -57,7 +57,7 @@ export default ({config, db}) => {
     });
 
     // '/hub/:hubId' - Delete
-    api.delete('/:hubId', (req, res) => {
+    api.delete('/remove/:hubId', (req, res) => {
         Hub.remove({_id: req.params.hubId}, (err, deletedHub) => {
             if (err) {
                 res.send(err);

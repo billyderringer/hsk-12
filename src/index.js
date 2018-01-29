@@ -19,7 +19,7 @@ app.use(bodyParser.json({
 
 // passport config
 
-// api routes v1
+// api routes
 app.use('/v1/', routes);
 
 let port = config.port;

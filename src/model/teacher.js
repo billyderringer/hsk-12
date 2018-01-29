@@ -17,10 +17,6 @@ let TeacherSchema = new Schema({
     homerooms: [{
         type: Schema.ObjectId,
         ref: 'Homeroom'
-    }],
-    students: [{
-        type: Schema.ObjectId,
-        ref: 'Student'
     }]
 });
 

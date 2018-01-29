@@ -10,7 +10,7 @@ export default ({config, db}) => {
     let homeroomCount = 0;
 
     // '/homeroom/:hubId' - Create new homeroom
-    api.post('/:hubId', (req, res) => {
+    api.post('/create/:hubId', (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
                 res.send(err);
@@ -60,7 +60,7 @@ export default ({config, db}) => {
     });
 
     // '/homeroom/:roomId' - Update homeroom
-    api.put('/:roomId', (req, res) => {
+    api.put('/update/:roomId', (req, res) => {
         Homeroom.findById(req.params.roomId, (err, homeroom) => {
             if (err) {
                 res.send(err);
@@ -78,7 +78,7 @@ export default ({config, db}) => {
     });
 
     // '/homeroom/:roomId' - Remove homeroom
-    api.delete('/:roomId', (req, res) => {
+    api.delete('/remove/:roomId', (req, res) => {
         let id = req.params.roomId;
         Homeroom.findById(id, (err, homeroom) => {
             let homeroomName = homeroom.roomName;

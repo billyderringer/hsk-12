@@ -44,8 +44,8 @@ app.use(_bodyParser2.default.json({
 
 // passport config
 
-// api routes v1
-app.use('/', _routes2.default);
+// api routes
+app.use('/v1/', _routes2.default);
 
 var port = _config2.default.port;
 app.server.listen(port);
