@@ -34,7 +34,7 @@ exports.default = function (_ref) {
 
     var api = (0, _express.Router)();
 
-    // '/hub/' - Create new hub
+    // '/hub/create' - Create new hub
     api.post('/create', function (req, res) {
         var newHub = new _hub2.default();
         newHub.hubName = req.body.hubName;

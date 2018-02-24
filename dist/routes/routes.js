@@ -20,10 +20,6 @@ var _db = require('../db');
 
 var _db2 = _interopRequireDefault(_db);
 
-var _data = require('../controller/data');
-
-var _data2 = _interopRequireDefault(_data);
-
 var _hub = require('../controller/hub');
 
 var _hub2 = _interopRequireDefault(_hub);
@@ -52,7 +48,6 @@ var router = (0, _express2.default)();
     router.use((0, _middleware2.default)({ config: _config2.default, db: db }));
 
     //api routes
-    router.use('/data', (0, _data2.default)({ config: _config2.default, db: db }));
     router.use('/hub', (0, _hub2.default)({ config: _config2.default, db: db }));
     router.use('/homeroom', (0, _homeroom2.default)({ config: _config2.default, db: db }));
     router.use('/teacher', (0, _teacher2.default)({ config: _config2.default, db: db }));

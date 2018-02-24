@@ -19,6 +19,10 @@ let StudentSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'Homeroom'
     }],
+    teachers: [{
+        type: Schema.ObjectId,
+        ref: 'Teacher'
+    }],
     subjects: [{
         type: Schema.ObjectId,
         ref: 'Subject'

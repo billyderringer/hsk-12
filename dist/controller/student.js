@@ -145,43 +145,41 @@ exports.default = function (_ref) {
     });
 
     // '/:studentId' - Delete student
-    api.delete('/:studentId', function (req, res) {
+    api.delete('/remove/:studentId', function (req, res) {
+        var id = req.params.studentId;
         _student2.default.findById(req.params.studentId, function (err, student) {
-            var name = student.firstName + ' ' + lastName;
-            var id = student._id;
+
             if (err) {
                 res.send(err);
             }
-            _hub2.default.find({ students: id }, function (err, hub) {
-                hub.pull(student);
+            _hub2.default.findById(student.hub, function (err, hub) {
+                if (err) {
+                    res.send(err);
+                }
+                hub.students.pull(student);
                 hub.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
                 });
             });
-            _homeroom2.default.find({ students: id }, function (err, room) {
-                room.pull(student);
+            _homeroom2.default.findById(student.homerooms, function (err, room) {
+                if (err) {
+                    res.send(err);
+                }
+                room.students.pull(student);
                 room.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
                 });
             });
-            _teacher2.default.find({ students: id }, function (err, teacher) {
-                teacher.pull(student);
-                teacher.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-            });
-            _student2.default.remove(id, function (err) {
+            _student2.default.remove(student, function (err) {
                 if (err) {
                     res.send(err);
                 }
+                res.json({ message: "Student successfully removed" });
             });
-            res.json({ message: 'Student: ' + name + ' successfully removed' });
         });
     });
 

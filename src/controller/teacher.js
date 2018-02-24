@@ -4,10 +4,47 @@ import Hub from '../model/hub';
 import Homeroom from '../model/homeroom';
 import Teacher from '../model/teacher';
 import Student from '../model/student';
+import passport from 'passport';
+import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware';
 
 export default ({config, db}) => {
     let api = Router();
     let teacherCount = 0;
+
+    // '/teacher/register' - Create new teachers
+    api.post('/register', (req, res) => {
+        Teacher.register(new Teacher({
+            username: req.body.email
+        }), req.body.password, (err, teacher) => {
+            if(err){
+                res.send(err);
+            }
+            passport.authenticate(
+                'local', {
+                    session: false
+                })(req, res, () => {
+                res.status(200).send('Successfully created new account');
+            });
+        });
+    });
+
+    api.post('/login', passport.authenticate(
+        'local', {
+            session: false,
+            scope: []
+        }), generateAccessToken, respond);
+
+    // 'v1/account/logout' - Logout
+    api.get('/logout', authenticate, (req, res) => {
+        res.logout();
+        res.status(200).send('Successfully logged out');
+    });
+
+    api.get('/me', authenticate, (req, res) => {
+        res.status(200).json(req.user);
+    });
+
+
 
     // '/teacher/:roomId' - Create new teachers
     api.post('/:roomId', (req, res) => {
