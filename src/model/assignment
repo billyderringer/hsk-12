@@ -1,0 +1,18 @@
+import mongoose from 'mongoose';
+let Schema = mongoose.Schema;
+
+let AssignmentSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        default: 'None'
+    },
+    correctAnswers: Number,
+    incorrectAnswers: Number,
+    grade: Number
+});
+
+module.exports = mongoose.model('Assignment', AssignmentSchema);

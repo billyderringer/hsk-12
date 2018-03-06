@@ -1,49 +1,30 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
+import SchoolTerm from './schoolTerm';
+import Student from './student';
+import passportLocalMongoose from 'passport-local-mongoose';
 
-let ProfileSchema = new Schema({
-    location: {
-        type: String,
-        default: "None"
-    },
-    description: {
-        type: String,
-        default: "None"
-    },
-    profilePic: {
-        type: String,
-        default: "default-profile.png"
-    }
-});
-
-let TeacherSchema = new Schema({
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    userProfile: [
-        ProfileSchema
-    ],
-    hub: {
-        type: Schema.ObjectId,
-        ref: 'Hub',
-    },
-    homerooms: [{
-        type: Schema.ObjectId,
-        ref: 'Homeroom'
+let Teacher = new Schema({
+    firstName: {type: String,required: true},
+    lastName: {type: String,required: true},
+    email: String,
+    password: String,
+    streetAddress: {type: String,default: "None"},
+    usState: {type: String,default: "None"},
+    zipCode: {type: String,default: "None"},
+    phonePrimary: {type: String,default: "None"},
+    phoneSecondary: {type: String,default: "None"},
+    personalDescription: {type: String,default: "None"},
+    avatar: {type: String,default: "default-profile.png"},
+    homeroomName: {type: String,default: "Homeroom"},
+    schoolTerms: [{
+        students: [{
+            subjects: [{
+                assignments: [{}]
+            }]
+        }]
     }]
 });
 
-module.exports = mongoose.model('Teacher', TeacherSchema);
+Teacher.plugin(passportLocalMongoose);
+module.exports = mongoose.model('Teacher', Teacher);
