@@ -4,13 +4,14 @@ import Hub from '../model/hub';
 import Homeroom from '../model/homeroom';
 import Teacher from '../model/teacher';
 import Student from '../model/student';
+import {authenticate} from '../middleware/authMiddleware';
 
 export default ({config, db}) => {
     let api = Router();
     let homeroomCount = 0;
 
     // '/homeroom/:hubId' - Create new homeroom
-    api.post('/create/:hubId', (req, res) => {
+    api.post('/create/:hubId', authenticate, (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
                 res.send(err);

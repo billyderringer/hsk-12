@@ -40,7 +40,7 @@ export default ({config, db}) => {
         });
     });
 
-    // '/hub/:hubId' - Update
+    // '/hub/update/:hubId' - Update
     api.put('/update/:hubId', (req, res) => {
         Hub.findById(req.params.hubId, (err, hub) => {
             if (err) {
@@ -56,7 +56,7 @@ export default ({config, db}) => {
         });
     });
 
-    // '/hub/:hubId' - Delete
+    // '/hub/remove/:hubId' - Delete
     api.delete('/remove/:hubId', (req, res) => {
         Hub.remove({_id: req.params.hubId}, (err, deletedHub) => {
             if (err) {

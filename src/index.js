@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import config from './config/config';
 import routes from './routes/routes';
 import cors from 'cors';
+import passport from 'passport';
+const LocalStrategy = require('passport-local').Strategy;
 
 let app = express();
 app.server = http.Server(app);
@@ -18,6 +20,16 @@ app.use(bodyParser.json({
 }));
 
 // passport config
+app.use(passport.initialize());
+let Teacher = require('./model/teacher');
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+},
+    Teacher.authenticate()
+));
+passport.serializeUser(Teacher.serializeUser());
+passport.deserializeUser(Teacher.deserializeUser());
 
 // api routes
 app.use('/v1/', routes);
