@@ -1,11 +1,15 @@
 import mongoose from 'mongoose';
-import Student from './student';
 let Schema = mongoose.Schema;
 
 let SchoolTermSchema = new Schema({
-    termTitle: {type: String, required: true},
+    termTitle: String,
     termStart: Date,
-    termEnd: Date
+    termEnd: Date,
+    teacher: {
+        type: Schema.ObjectId,
+        ref:'Teacher'
+    }
 });
 
+mongoose.plugin(schema => { schema.options.usePushEach = true });
 module.exports = mongoose.model('SchoolTerm', SchoolTermSchema);

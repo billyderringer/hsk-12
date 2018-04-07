@@ -8,12 +8,13 @@ import Student from '../model/student';
 export default ({config, db}) => {
     let api = Router();
 
-    // '/student/:roomId' - Create new students
-    api.post('/:roomId', (req, res) => {
-        Homeroom.findById(req.params.roomId, (err, homeroom) => {
+    // '/student/:teacherId/:termId' - Create new students
+    api.post('/:teacherId/:termId', (req, res) => {
+        Teacher.findById(req.params.teacherId, (err, teacher) => {
             if(err){
                 res.send(err);
             }
+
             let newStudent = new Student();
             newStudent.firstName = req.body.firstName;
             newStudent.lastName = req.body.lastName;

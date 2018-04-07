@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
-import SchoolTerm from './schoolTerm';
-import Student from './student';
 import passportLocalMongoose from 'passport-local-mongoose';
 
 let Teacher = new Schema({
@@ -18,13 +16,11 @@ let Teacher = new Schema({
     avatar: {type: String,default: "default-profile.png"},
     homeroomName: {type: String,default: "Homeroom"},
     schoolTerms: [{
-        students: [{
-            subjects: [{
-                assignments: [{}]
-            }]
-        }]
+        type: Schema.ObjectId,
+        ref:'SchoolTerm'
     }]
 });
 
+mongoose.plugin(schema => { schema.options.usePushEach = true });
 Teacher.plugin(passportLocalMongoose);
 module.exports = mongoose.model('Teacher', Teacher);

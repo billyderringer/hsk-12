@@ -2,9 +2,8 @@ import express from 'express';
 import config from '../config/config';
 import middleware from '../middleware/middleware';
 import initializeDb from '../db';
-import Hub from '../controller/hub';
-import Homeroom from '../controller/homeroom';
 import Teacher from '../controller/teacher';
+import SchoolTerm from '../controller/schoolTerm';
 import Student from '../controller/student';
 
 
@@ -18,9 +17,8 @@ initializeDb(db => {
     router.use(middleware({config, db}));
 
     //api routes
-    router.use('/hub', Hub({config, db}));
-    router.use('/homeroom', Homeroom({config, db}));
     router.use('/teacher', Teacher({config, db}));
+    router.use('/term', SchoolTerm({config, db}));
     router.use('/student', Student({config, db}));
 });
 

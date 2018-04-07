@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import {Router} from 'express';
 import Teacher from '../model/teacher';
 import SchoolTerm from '../model/schoolTerm';
@@ -165,32 +164,6 @@ export default ({config, db}) => {
 
     // ****** Create methods ****** //
 
-    // '/teacher/term/create/:teacherId' - Create new term
-    api.post('/term/create/:teacherId', authenticate, (req, res) => {
-        Teacher.findById(req.params.teacherId, (err, teacher) => {
-            if (err) {
-                res.send(err);
-            }
-            let newTerm = new SchoolTerm();
-            newTerm.termTitle = req.body.termTitle;
-            newTerm.termStart = req.body.termStart;
-            newTerm.termEnd = req.body.termEnd;
-            newTerm.teacher = teacher._id;
-            newTerm.save(err => {
-                if (err) {
-                    res.send(err);
-                }
-                teacher.schoolTerms.push(newTerm);
-                teacher.save(err => {
-                    if (err) {
-                        res.send(err);
-                    }
-                    res.json({message: 'New term saved'});
-                });
-            });
-        })
-    });
-
     api.post('/:teacherId/create/student/:termId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
@@ -240,6 +213,12 @@ export default ({config, db}) => {
             res.json(term);
         });
     });
+
+
+
+
+
+
     return api;
 }
 
