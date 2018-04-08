@@ -16,7 +16,12 @@ let StudentSchema = new Schema({
     subjects: [{
         type: Schema.ObjectId,
         ref:'Subject'
+    }],
+    assignments: [{
+        type: Schema.ObjectId,
+        ref: 'Assignment'
     }]
 });
 
+mongoose.plugin(schema => { schema.options.usePushEach = true });
 module.exports = mongoose.model('Student', StudentSchema);

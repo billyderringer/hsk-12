@@ -6,7 +6,7 @@ import { authenticate } from '../middleware/authMiddleware';
 export default ({config, db}) => {
     let api = Router();
 
-    // '/term/create/:teacherId' - Create new term
+    // '/term/...' - Create new term
     api.post('/create/:teacherId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
@@ -21,12 +21,12 @@ export default ({config, db}) => {
                 if (err) {
                     res.send(err+' :err saving new term');
                 }
-                teacher.schoolTerms.push(newTerm);
+                teacher.terms.push(newTerm);
                 teacher.save(err => {
                     if (err) {
-                        res.send(err+' :err saving teacher');
+                        res.send(err+' :err saving term to teacher');
                     }
-                    res.json({message: 'New term saved'});
+                    res.json({message: 'new term saved'});
                 });
             });
         })

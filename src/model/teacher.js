@@ -15,7 +15,7 @@ let Teacher = new Schema({
     personalDescription: {type: String,default: "None"},
     avatar: {type: String,default: "default-profile.png"},
     homeroomName: {type: String,default: "Homeroom"},
-    schoolTerms: [{
+    terms: [{
         type: Schema.ObjectId,
         ref:'SchoolTerm'
     }],

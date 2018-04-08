@@ -11,7 +11,7 @@ import {generateAccessToken, respond, authenticate} from '../middleware/authMidd
 export default ({config, db}) => {
     let api = Router();
 
-    // '/teacher/register' - Register new account
+    // '/teacher/...' - Register new account
     api.post('/register', (req, res) => {
         Teacher.register(new Teacher({
             username: req.body.email,
@@ -30,38 +30,40 @@ export default ({config, db}) => {
         });
     });
 
-    // 'v1/teacher/login' - Login
+    // Login
     api.post('/login', passport.authenticate(
         'local', {
             session: false,
             scope: []
         }), generateAccessToken, respond);
 
-    // 'v1/teacher/logout' - Logout
+    // Logout
     api.get('/logout', authenticate, (req, res) => {
         res.logout();
         res.status(200).send('Successfully logged out');
     });
 
-    // 'v1/teacher/me' - Get info about account
+    // Get info about account
     api.get('/me', authenticate, (req, res) => {
         res.status(200).json(req.user);
     });
 
-    // '/teacher/:teacherId' - Get teacher by teacherId
+    // Get teacher by teacherId
     api.get('/:teacherId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if(teacher === null){
-                res.send('teacher not found')
+                res.json('teacher not found')
             }
-            if (err) {
+            else if (err) {
                 res.send(err);
             }
-            res.json(teacher);
+            else {
+                res.json(teacher);
+            }
         });
     });
 
-    // '/teacher/:id' - Update teacher basic info
+    // Update teacher basic info
     // email will be unchangeable as it will be username
     api.patch('/update/:teacherId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
@@ -153,96 +155,82 @@ export default ({config, db}) => {
         });
     });
 
-    // '/teacher/:teacherId' - Delete teacher
+    // Delete teacher
     api.delete('/remove/:teacherId', authenticate, (req, res) => {
-
-        Teacher.remove({_id: req.params.teacherId}, (err, teacher) => {
+        Teacher.remove({_id: req.params.teacherId}, err => {
             if (err) {
                 res.send(err);
             }
             let id = req.params.teacherId
-            if(teacher.schoolTerms !== null) {
-                SchoolTerm.find({teacher: id}, (err, result) => {
-                    if (err) {
-                        res.send(err+' :err finding term in teacher')
-                    }
-                    if (result === null) {
-                        res.status(404).send("term not found")
-                    }
-                    else (
-                        SchoolTerm.remove({
-                            teacher: id
-                        }, err => {
-                            if (err) {
-                                res.send(err + ' :err removing term')
-                            }
-                            res.json({message: 'term removed'})
-                        })
-                    )
-                })
-            }
-            if(teacher.students !== null) {
-                Student.find({teacher: id}, (err, result) => {
-                    if (err) {
-                        res.send(err+' :err finding student in teacher')
-                    }
-                    if (result === null) {
-                        res.status(404).send("student not found")
-                    }
-                    else (
-                        Student.remove({
-                            teacher: id
-                        }, err => {
-                            if (err) {
-                                res.send(err + ' :err removing student')
-                            }
-                            res.json({message: 'student removed'})
-                        })
-                    )
-                })
-            }
-            if(teacher.subjects !== null) {
-                Subject.find({teacher: id}, (err, result) => {
-                    if (err) {
-                        res.send(err+' :err finding subject in teacher')
-                    }
-                    if (result === null) {
-                        res.status(404).send("subject not found")
-                    }
-                    else (
-                        Subject.remove({
-                            teacher: id
-                        }, err => {
-                            if (err) {
-                                res.send(err + ' :err removing subject')
-                            }
-                            res.json({message: 'subject removed'})
-                        })
-                    )
-                })
-            }
-            if(teacher.assignments !== null) {
-                Assignment.find({teacher: id}, (err, result) => {
-                    if (err) {
-                        res.send(err+' :err finding assignment in teacher')
-                    }
-                    if (result === null) {
-                        res.status(404).send("assignment not found")
-                    }
-                    else (
-                        Assignment.remove({
-                            teacher: id
-                        }, err => {
-                            if (err) {
-                                res.send(err + ' :err removing assignment')
-                            }
-                            res.json({message: 'assignment removed'})
-                        })
-                    )
-                })
-            }
-
-            res.json({message: "Teacher successfully removed"});
+            SchoolTerm.find({teacher: id}, (err, result) => {
+                if (err) {
+                    res.send(err+' :err finding term in teacher')
+                }
+                if (result === null) {
+                    res.status(404).send("term not found")
+                }
+                else (
+                    SchoolTerm.remove({
+                        teacher: id
+                    }, err => {
+                        if (err) {
+                            res.send(err + ' :err removing term')
+                        }
+                    })
+                )
+            })
+            Student.find({teacher: id}, (err, result) => {
+                if (err) {
+                    res.send(err+' :err finding student in teacher')
+                }
+                if (result === null) {
+                    res.status(404).send("student not found")
+                }
+                else (
+                    Student.remove({
+                        teacher: id
+                    }, err => {
+                        if (err) {
+                            res.send(err + ' :err removing student')
+                        }
+                    })
+                )
+            })
+            Subject.find({teacher: id}, (err, result) => {
+                if (err) {
+                    res.send(err+' :err finding subject in teacher')
+                }
+                if (result === null) {
+                    res.status(404).send("subject not found")
+                }
+                else (
+                    Subject.remove({
+                        teacher: id
+                    }, err => {
+                        if (err) {
+                            res.send(err + ' :err removing subject')
+                        }
+                    })
+                )
+            })
+            Assignment.find({teacher: id}, (err, result) => {
+                if (err) {
+                    res.send(err+' :err finding assignment in teacher')
+                }
+                if (result === null) {
+                    res.status(404).send("assignment not found")
+                }
+                else (
+                    Assignment.remove({
+                        teacher: id
+                    }, err => {
+                        if (err) {
+                            res.send(err + ' :err removing assignment')
+                        }
+                    })
+                )
+            })
+            res.json({message: "teacher successfully removed"});
         });
     });
 
