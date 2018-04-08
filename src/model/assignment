@@ -12,7 +12,23 @@ let AssignmentSchema = new Schema({
     },
     correctAnswers: Number,
     incorrectAnswers: Number,
-    grade: Number
+    grade: Number,
+    teacher: {
+        type: Schema.ObjectId,
+        ref: 'Teacher'
+    },
+    term: {
+        type: Schema.ObjectId,
+        ref: 'SchoolTerm'
+    },
+    student: {
+        type: Schema.ObjectId,
+        ref: 'Student'
+    },
+    subject: {
+        type: Schema.ObjectId,
+        ref: 'Subject'
+    }
 });
 
 module.exports = mongoose.model('Assignment', AssignmentSchema);

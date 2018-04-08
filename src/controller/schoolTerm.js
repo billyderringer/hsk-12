@@ -1,18 +1,13 @@
 import {Router} from 'express';
 import Teacher from '../model/teacher';
 import SchoolTerm from '../model/schoolTerm';
-import Student from '../model/student';
-import Subject from '../model/subject';
-import Assignment from '../model/assignment';
-import passport from 'passport';
-import config from '../config/config';
-import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware';
+import { authenticate } from '../middleware/authMiddleware';
 
 export default ({config, db}) => {
     let api = Router();
 
     // '/term/create/:teacherId' - Create new term
-    api.post('/term/create/:teacherId', authenticate, (req, res) => {
+    api.post('/create/:teacherId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err);

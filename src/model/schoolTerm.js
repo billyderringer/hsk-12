@@ -8,7 +8,11 @@ let SchoolTermSchema = new Schema({
     teacher: {
         type: Schema.ObjectId,
         ref:'Teacher'
-    }
+    },
+    students: [{
+        type: Schema.ObjectId,
+        ref:'Student'
+    }]
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
