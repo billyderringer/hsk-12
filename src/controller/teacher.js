@@ -157,82 +157,67 @@ export default ({config, db}) => {
 
     // Delete teacher
     api.delete('/remove/:teacherId', authenticate, (req, res) => {
-        Teacher.remove({_id: req.params.teacherId}, err => {
+        Teacher.find({_id: req.params.teacherId}, err => {
             if (err) {
-                res.send(err);
+                res.send(err+' :err finding teacher by id')
             }
             let id = req.params.teacherId
-            SchoolTerm.find({teacher: id}, (err, result) => {
+            SchoolTerm.find({teacher: id}, (err, term) => {
                 if (err) {
                     res.send(err+' :err finding term in teacher')
                 }
-                if (result === null) {
+                if (term === null) {
                     res.status(404).send("term not found")
                 }
-                else (
-                    SchoolTerm.remove({
-                        teacher: id
-                    }, err => {
+                    Student.find({teacher: id}, (err, student) => {
                         if (err) {
-                            res.send(err + ' :err removing term')
+                            res.send(err+' :err finding student in term')
+                        }
+                        if (student === null) {
+                            res.status(404).send("student not found")
+                        }
+                            Subject.find({teacher: id}, (err, subject) => {
+                                if (err) {
+                                    res.send(err+' :err finding subject in student')
+                                }
+                                if (subject === null) {
+                                    res.status(404).send("subject not found")
+                                }
+                                    Assignment.find({teacher: id}, (err, assignment) => {
+                                        if (err) {
+                                            res.send(err+' :err finding assignment in subject')
+                                        }
+                                        if (assignment === null) {
+                                            res.status(404).send("assignment not found")
+                                        }
+                                    }).remove( err => {
+                                        if (err) {
+                                            res.send(err+' :err removing assignment')
+                                        }
+                                    })
+                            }).remove( err => {
+                                if (err) {
+                                    res.send(err+' :err removing subject')
+                                }
+                            })
+
+                    }).remove( err => {
+                        if (err) {
+                            res.send(err+' :err removing student')
                         }
                     })
-                )
-            })
-            Student.find({teacher: id}, (err, result) => {
+            }).remove( err => {
                 if (err) {
-                    res.send(err+' :err finding student in teacher')
+                    res.send(err + ' :err removing term')
                 }
-                if (result === null) {
-                    res.status(404).send("student not found")
-                }
-                else (
-                    Student.remove({
-                        teacher: id
-                    }, err => {
-                        if (err) {
-                            res.send(err + ' :err removing student')
-                        }
-                    })
-                )
             })
-            Subject.find({teacher: id}, (err, result) => {
-                if (err) {
-                    res.send(err+' :err finding subject in teacher')
-                }
-                if (result === null) {
-                    res.status(404).send("subject not found")
-                }
-                else (
-                    Subject.remove({
-                        teacher: id
-                    }, err => {
-                        if (err) {
-                            res.send(err + ' :err removing subject')
-                        }
-                    })
-                )
-            })
-            Assignment.find({teacher: id}, (err, result) => {
-                if (err) {
-                    res.send(err+' :err finding assignment in teacher')
-                }
-                if (result === null) {
-                    res.status(404).send("assignment not found")
-                }
-                else (
-                    Assignment.remove({
-                        teacher: id
-                    }, err => {
-                        if (err) {
-                            res.send(err + ' :err removing assignment')
-                        }
-                    })
-                )
-            })
-            res.json({message: "teacher successfully removed"});
-        });
-    });
+        }).remove( err => {
+            if (err) {
+                res.send(err + ' :err removing teacher')
+            }
+        })
+        res.json({message: "teacher successfully removed"})
+    })
 
     return api;
 }

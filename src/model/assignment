@@ -8,11 +8,24 @@ let AssignmentSchema = new Schema({
     },
     description: {
         type: String,
-        default: 'None'
+        default: "None"
     },
-    correctAnswers: Number,
-    incorrectAnswers: Number,
-    grade: Number,
+    assignmentType: {
+        type: String,
+        default: "General"
+    },
+    correctAnswers: {
+        type: Number,
+        default: 0
+    },
+    incorrectAnswers: {
+        type: Number,
+        default: 0
+    },
+    grade: {
+        type: Number,
+        default: 0
+    },
     teacher: {
         type: Schema.ObjectId,
         ref: 'Teacher'
@@ -27,7 +40,7 @@ let AssignmentSchema = new Schema({
     },
     subject: {
         type: Schema.ObjectId,
-        ref: 'Subject'
+        ref: "Subject"
     }
 });
 

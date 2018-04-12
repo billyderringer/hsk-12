@@ -8,11 +8,7 @@ export default ({config, db}) => {
     let api = Router()
 
     // '/student/...' - Create new student
-    api.post('/create/:teacherId/:termId', authenticate, (req, res) => {
-        Teacher.findById(req.params.teacherId, (err, teacher) => {
-            if (err) {
-                res.send(err)
-            }
+    api.post('/create/:termId', authenticate, (req, res) => {
             SchoolTerm.findById(req.params.termId, (err, term) => {
                 if(err){
                     res.send(err+' :err finding term by id')
@@ -21,18 +17,12 @@ export default ({config, db}) => {
                 newStudent.firstName = req.body.firstName
                 newStudent.lastName = req.body.lastName
                 newStudent.gradeLevel = req.body.gradeLevel
-                newStudent.teacher = teacher._id
+                newStudent.teacher = term.teacher
                 newStudent.term = term._id
                 newStudent.save(err => {
                     if (err) {
                         res.send(err+' :err saving new student')
                     }
-                    teacher.students.push(newStudent)
-                    teacher.save(err => {
-                        if (err) {
-                            res.send(err+' :err saving student to teacher')
-                        }
-                    })
                     term.students.push(newStudent)
                     term.save(err => {
                         if(err){
@@ -42,8 +32,6 @@ export default ({config, db}) => {
                     })
                 });
             });
-
-        })
     });
 
     return api;

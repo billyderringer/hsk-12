@@ -7,19 +7,11 @@ let SchoolTermSchema = new Schema({
     termEnd: Date,
     teacher: {
         type: Schema.ObjectId,
-        ref:'Teacher'
+        ref: 'Teacher'
     },
     students: [{
         type: Schema.ObjectId,
         ref:'Student'
-    }],
-    subjects: [{
-        type: Schema.ObjectId,
-        ref:'Subject'
-    }],
-    assignments: [{
-        type: Schema.ObjectId,
-        ref: 'Assignment'
     }]
 });
 

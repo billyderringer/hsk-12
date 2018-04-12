@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Assignment from './assignment';
 let Schema = mongoose.Schema;
 
 let SubjectSchema = new Schema({
