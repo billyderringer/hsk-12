@@ -67,7 +67,7 @@ export default ({config, db}) => {
                 student[0].subjects.pull(subject)
                 student[0].save(err => {
                     if (err) {
-                        res.send(err + ' :err saving subject')
+                        res.send(err + ' :err saving student')
                     }
                 })
             })

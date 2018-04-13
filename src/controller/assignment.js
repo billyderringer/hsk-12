@@ -2,6 +2,7 @@ import {Router} from 'express'
 import Subject from '../model/subject'
 import Assignment from '../model/assignment'
 import { authenticate } from '../middleware/authMiddleware'
+import Student from "../model/student";
 
 export default ({config, db}) => {
     let api = Router();
@@ -37,6 +38,51 @@ export default ({config, db}) => {
             });
         });
     });
+
+    //Get assignment by id
+    api.get('/:assignmentId', (req, res) => {
+        Assignment.findById(req.params.assignmentId, (err, assignment) => {
+            console.log(assignment)
+            if(assignment === null){
+                res.json('assignment not found')
+            }
+            else if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(assignment);
+            }
+        });
+    });
+
+    // Delete assignment
+    api.delete('/remove/:assignmentId', authenticate, (req, res) => {
+        let id = req.params.assignmentId
+
+        Assignment.findById(id, (err, assignment) => {
+            console.log(assignment)
+            if (err) {
+                res.send(err + ' :err finding assignment by id')
+            }
+            Subject.find({assignments: id}, (err, subject) => {
+                if (err) {
+                    res.send(err + ' :err finding subject by assignmentId')
+                }
+                subject[0].assignments.pull(assignment)
+                subject[0].save(err => {
+                    if (err) {
+                        res.send(err + ' :err saving subject')
+                    }
+                })
+            })
+            Assignment.remove({_id: req.params.assignmentId}, err => {
+                if (err) {
+                    res.send(err + ' :err removing Assignment')
+                }
+            })
+        })
+        res.json({message: "assignment successfully removed"})
+    })
 
     return api;
 }
