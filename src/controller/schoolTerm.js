@@ -1,9 +1,9 @@
-import {Router} from 'express';
-import Teacher from '../model/teacher';
-import SchoolTerm from '../model/schoolTerm';
-import Assignment from "../model/assignment";
-import Student from "../model/student";
-import Subject from "../model/subject";
+import {Router} from 'express'
+import Teacher from '../model/teacher'
+import SchoolTerm from '../model/schoolTerm'
+import Assignment from "../model/assignment"
+import Student from "../model/student"
+import Subject from "../model/subject"
 
 import { authenticate } from '../middleware/authMiddleware';
 
@@ -132,5 +132,5 @@ export default ({config, db}) => {
         res.json({message: "term successfully removed"})
     })
 
-    return api;
+    return api
 }

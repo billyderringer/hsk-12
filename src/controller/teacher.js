@@ -1,15 +1,14 @@
-import {Router} from 'express';
-import Teacher from '../model/teacher';
-import SchoolTerm from '../model/schoolTerm';
-import Student from '../model/student';
-import Subject from '../model/subject';
-import Assignment from '../model/assignment';
-import passport from 'passport';
-import config from '../config/config';
-import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware';
+import {Router} from 'express'
+import Teacher from '../model/teacher'
+import SchoolTerm from '../model/schoolTerm'
+import Student from '../model/student'
+import Subject from '../model/subject'
+import Assignment from '../model/assignment'
+import passport from 'passport'
+import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware'
 
-export default ({config, db}) => {
-    let api = Router();
+export default () => {
+    let api = Router()
 
     // '/teacher/...' - Register new account
     api.post('/register', (req, res) => {
@@ -28,25 +27,25 @@ export default ({config, db}) => {
                 res.status(200).send('Successfully created new account');
             });
         });
-    });
+    })
 
     // Login
     api.post('/login', passport.authenticate(
         'local', {
             session: false,
             scope: []
-        }), generateAccessToken, respond);
+        }), generateAccessToken, respond)
 
     // Logout
     api.get('/logout', authenticate, (req, res) => {
         res.logout();
         res.status(200).send('Successfully logged out');
-    });
+    })
 
     // Get info about account
     api.get('/me', authenticate, (req, res) => {
         res.status(200).json(req.user);
-    });
+    })
 
     // Get teacher by teacherId
     api.get('/:teacherId', authenticate, (req, res) => {
@@ -61,7 +60,7 @@ export default ({config, db}) => {
                 res.json(teacher);
             }
         });
-    });
+    })
 
     // Update teacher basic info
     // email will be unchangeable as it will be username
@@ -153,7 +152,7 @@ export default ({config, db}) => {
                 res.json({message: teacher.firstName + ' ' + teacher.lastName + ': Info updated successfully'});
             });
         });
-    });
+    })
 
     // Delete teacher
     api.delete('/remove/:teacherId', authenticate, (req, res) => {
@@ -219,6 +218,6 @@ export default ({config, db}) => {
         res.json({message: "teacher successfully removed"})
     })
 
-    return api;
+    return api
 }
 

@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/authMiddleware'
 import Assignment from "../model/assignment"
 
 export default ({config, db}) => {
-    let api = Router();
+    let api = Router()
 
     // '/subject/...' Create new subject
     api.post('/create/:studentId', authenticate, (req, res) => {

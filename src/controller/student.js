@@ -2,8 +2,8 @@ import {Router} from 'express'
 import SchoolTerm from '../model/schoolTerm'
 import Student from '../model/student'
 import { authenticate } from '../middleware/authMiddleware'
-import Assignment from "../model/assignment";
-import Subject from "../model/subject";
+import Assignment from "../model/assignment"
+import Subject from "../model/subject"
 
 export default ({config, db}) => {
     let api = Router()

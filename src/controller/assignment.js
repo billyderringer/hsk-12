@@ -2,10 +2,9 @@ import {Router} from 'express'
 import Subject from '../model/subject'
 import Assignment from '../model/assignment'
 import { authenticate } from '../middleware/authMiddleware'
-import Student from "../model/student";
 
-export default ({config, db}) => {
-    let api = Router();
+export default () => {
+    let api = Router()
 
     // '/assignment/...' Create new assignment
     api.post('/create/:subjectId', authenticate, (req, res) => {
@@ -37,7 +36,7 @@ export default ({config, db}) => {
                 })
             });
         });
-    });
+    })
 
     //Get assignment by id
     api.get('/:assignmentId', (req, res) => {
@@ -53,7 +52,41 @@ export default ({config, db}) => {
                 res.json(assignment);
             }
         });
-    });
+    })
+
+    // Update assignment basic info
+    api.patch('/update/:assignmentId', authenticate, (req, res) => {
+        Assignment.findById(req.params.assignmentId, (err, assignment) => {
+            if (err) {
+                res.send(err)
+            }
+            if (req.body.title !== undefined) {
+                assignment.title = req.body.title
+            }
+            if (req.body.description !== undefined) {
+                assignment.description = req.body.description
+            }
+            if (req.body.assignmentType !== undefined) {
+                assignment.assignmentType = req.body.assignmentType
+            }
+            if (req.body.correctAnswers !== undefined) {
+                assignment.correctAnswers = req.body.correctAnswers
+            }
+            if (req.body.incorrectAnswers !== undefined) {
+                assignment.incorrectAnswers = req.body.incorrectAnswers
+            }
+            if (req.body.grade !== undefined) {
+                assignment.grade = req.body.grade
+            }
+
+            assignment.save(err => {
+                if (err) {
+                    res.send(err)
+                }
+                res.json({message: 'assignment info updated successfully'})
+            })
+        })
+    })
 
     // Delete assignment
     api.delete('/remove/:assignmentId', authenticate, (req, res) => {
@@ -84,5 +117,5 @@ export default ({config, db}) => {
         res.json({message: "assignment successfully removed"})
     })
 
-    return api;
+    return api
 }
