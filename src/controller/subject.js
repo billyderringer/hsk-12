@@ -4,7 +4,7 @@ import Subject from '../model/subject'
 import { authenticate } from '../middleware/authMiddleware'
 import Assignment from "../model/assignment"
 
-export default ({config, db}) => {
+export default () => {
     let api = Router()
 
     // '/subject/...' Create new subject
@@ -32,6 +32,21 @@ export default ({config, db}) => {
                         })
                     });
                 });
+    })
+
+    // Get subjects by studentId
+    api.get('/student/:studentId', (req, res) => {
+        Subject.find({student: req.params.studentId}, (err, subjects) => {
+            if(subjects === null){
+                res.json('subjects not found')
+            }
+            else if (err) {
+                res.send(err)
+            }
+            else {
+                res.json(subjects)
+            }
+        })
     })
 
     //Get subject by id

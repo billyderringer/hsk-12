@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/authMiddleware'
 import Assignment from "../model/assignment"
 import Subject from "../model/subject"
 
-export default ({config, db}) => {
+export default () => {
     let api = Router()
 
     // '/student/...' - Create new student
@@ -57,6 +57,21 @@ export default ({config, db}) => {
                 }
                 res.json({message: 'student info updated successfully'})
             })
+        })
+    })
+
+    // Get students by termId
+    api.get('/term/:termId', (req, res) => {
+        Student.find({term: req.params.termId}, (err, students) => {
+            if(students === null){
+                res.json('students not found')
+            }
+            else if (err) {
+                res.send(err)
+            }
+            else {
+                res.json(students)
+            }
         })
     })
 

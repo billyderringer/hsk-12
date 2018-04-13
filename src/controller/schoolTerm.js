@@ -4,10 +4,9 @@ import SchoolTerm from '../model/schoolTerm'
 import Assignment from "../model/assignment"
 import Student from "../model/student"
 import Subject from "../model/subject"
+import { authenticate } from '../middleware/authMiddleware'
 
-import { authenticate } from '../middleware/authMiddleware';
-
-export default ({config, db}) => {
+export default () => {
     let api = Router()
 
     // '/term/...' - Create new term
@@ -36,6 +35,22 @@ export default ({config, db}) => {
         })
     })
 
+    // Get terms by teacherId
+    api.get('/teacher/:teacherId', (req, res) => {
+        SchoolTerm.find({teacher: req.params.teacherId}, (err, terms) => {
+            console.log(terms)
+            if(terms === null){
+                res.json('terms not found')
+            }
+            else if (err) {
+                res.send(err)
+            }
+            else {
+                res.json(terms)
+            }
+        })
+    })
+
     // Get term by id
     api.get('/:termId', (req, res) => {
         SchoolTerm.findById(req.params.termId, (err, term) => {
@@ -44,12 +59,12 @@ export default ({config, db}) => {
                 res.json('term not found')
             }
             else if (err) {
-                res.send(err);
+                res.send(err)
             }
             else {
-                res.json(term);
+                res.json(term)
             }
-        });
+        })
     })
 
     // Update term basic info

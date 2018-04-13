@@ -38,6 +38,21 @@ export default () => {
         });
     })
 
+    // Get assignments by subjectId
+    api.get('/subject/:subjectId', (req, res) => {
+        Assignment.find({subject: req.params.subjectId}, (err, assignments) => {
+            if(assignments === null){
+                res.json('assignments not found')
+            }
+            else if (err) {
+                res.send(err)
+            }
+            else {
+                res.json(assignments)
+            }
+        })
+    })
+
     //Get assignment by id
     api.get('/:assignmentId', (req, res) => {
         Assignment.findById(req.params.assignmentId, (err, assignment) => {
