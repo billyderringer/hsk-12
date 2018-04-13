@@ -36,6 +36,31 @@ export default ({config, db}) => {
             });
     });
 
+    // Update student basic info
+    api.patch('/update/:studentId', authenticate, (req, res) => {
+        Student.findById(req.params.studentId, (err, student) => {
+            if (err) {
+                res.send(err)
+            }
+            if (req.body.firstName !== undefined) {
+                student.firstName = req.body.firstName
+            }
+            if (req.body.lastName !== undefined) {
+                student.lastName = req.body.lastName
+            }
+            if (req.body.gradeLevel !== undefined) {
+                student.gradeLevel = req.body.gradeLevel
+            }
+
+            student.save(err => {
+                if (err) {
+                    res.send(err)
+                }
+                res.json({message: 'student info updated successfully'})
+            })
+        })
+    })
+
     //Get student by id
     api.get('/:studentId', (req, res) => {
         Student.findById(req.params.studentId, (err, student) => {
