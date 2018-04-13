@@ -16,4 +16,4 @@ let SchoolTermSchema = new Schema({
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('SchoolTerm', SchoolTermSchema);
+module.exports = mongoose.model('SchoolTerm', SchoolTermSchema, 'SchoolTerm');

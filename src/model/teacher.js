@@ -23,4 +23,4 @@ let Teacher = new Schema({
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
 Teacher.plugin(passportLocalMongoose);
-module.exports = mongoose.model('Teacher', Teacher);
+module.exports = mongoose.model('Teacher', Teacher, 'Teacher');

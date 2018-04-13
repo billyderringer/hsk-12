@@ -23,4 +23,4 @@ let SubjectSchema = new Schema({
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('Subject', SubjectSchema);
+module.exports = mongoose.model('Subject', SubjectSchema, 'Subject');

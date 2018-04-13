@@ -20,4 +20,4 @@ let StudentSchema = new Schema({
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('Student', StudentSchema);
+module.exports = mongoose.model('Student', StudentSchema, 'Student');

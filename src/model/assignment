@@ -45,4 +45,5 @@ let AssignmentSchema = new Schema({
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('Assignment', AssignmentSchema);
+module.exports = mongoose.model(
+    'Assignment', AssignmentSchema, 'Assignment');

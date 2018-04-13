@@ -1,10 +1,11 @@
 import {Router} from 'express';
 import Teacher from '../model/teacher';
 import SchoolTerm from '../model/schoolTerm';
-import { authenticate } from '../middleware/authMiddleware';
 import Assignment from "../model/assignment";
 import Student from "../model/student";
 import Subject from "../model/subject";
+
+import { authenticate } from '../middleware/authMiddleware';
 
 export default ({config, db}) => {
     let api = Router();
@@ -35,64 +36,74 @@ export default ({config, db}) => {
         })
     });
 
+
+    api.get('/:termId', (req, res) => {
+        SchoolTerm.findById(req.params.termId, (err, term) => {
+            console.log(term)
+            if(term === null){
+                res.json('term not found')
+            }
+            else if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(term);
+            }
+        });
+    });
+
+
     // Delete term
     api.delete('/remove/:termId', authenticate, (req, res) => {
-        SchoolTerm.find({_id: req.params.termId}, (err,term) => {
+        let id = req.params.termId
+
+        SchoolTerm.findById(id, (err, term) => {
+            console.log(term)
             if (err) {
-                res.send(err+' :err finding term by id')
+                res.send(err + ' :err finding term by id')
             }
-            let id = req.params.termId
-            Student.find({term: id}, (err, student) => {
+            Teacher.find({terms: id}, (err, teacher) => {
                 if (err) {
-                    res.send(err+' :err finding student in term')
+                    res.send(err + ' :err finding teacher by termId')
                 }
-                if (student === null) {
-                    res.status(404).send("student not found")
-                }
-                Subject.find({term: id}, (err, subject) => {
+                teacher[0].terms.pull(term)
+                teacher[0].save(err => {
                     if (err) {
-                        res.send(err+' :err finding subject in student')
-                    }
-                    if (subject === null) {
-                        res.status(404).send("subject not found")
-                    }
-                    Assignment.find({term: id}, (err, assignment) => {
-                        if (err) {
-                            res.send(err+' :err finding assignment in subject')
-                        }
-                        if (assignment === null) {
-                            res.status(404).send("assignment not found")
-                        }
-                        Teacher.find({terms: req.params.termId}, (err, teacher) => {
-                            if (err) {
-                                res.send(err + ' :err finding teacher by termId')
-                            }
-                            teacher.terms.pull(term)
-                            teacher.save(err => {
-                                if (err) {
-                                    res.send(err + ' :err saving pull from teacher');
-                                }
-                            })
-                        })
-                    }).remove( err => {
-                        if (err) {
-                            res.send(err+' :err removing assignment')
-                        }
-                    })
-                }).remove( err => {
-                    if (err) {
-                        res.send(err+' :err removing subject')
+                        res.send(err + ' :err saving teacher')
                     }
                 })
-            }).remove( err => {
-                if (err) {
-                    res.send(err+' :err removing student')
-                }
             })
-        }).remove( err => {
-            if (err) {
-                res.send(err + ' :err removing term')
-            }
+            SchoolTerm.remove({_id: req.params.termId}, err => {
+                if (err) {
+                    res.send(err + ' :err removing SchoolTerm')
+                }
+                Student.remove({term: id}, (err, student) => {
+                    if (err) {
+                        res.send(err+' :err removing student in term')
+                    }
+                    if (student === null) {
+                        res.status(404).send("student not found")
+                    }
+
+                    Subject.remove({term: id}, (err, subject) => {
+                        if (err) {
+                            res.send(err+' :err removing subject in student')
+                        }
+                        if (subject === null) {
+                            res.status(404).send("subject not found")
+                        }
+
+                        Assignment.remove({term: id}, (err, assignment) => {
+                            if (err) {
+                                res.send(err+' :err removing assignment in subject')
+                            }
+                            if (assignment === null) {
+                                res.status(404).send("assignment not found")
+                            }
+                        })
+                    })
+                })
+            })
         })
         res.json({message: "term successfully removed"})
     })
