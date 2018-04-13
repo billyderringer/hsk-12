@@ -8,7 +8,7 @@ import Subject from "../model/subject";
 import { authenticate } from '../middleware/authMiddleware';
 
 export default ({config, db}) => {
-    let api = Router();
+    let api = Router()
 
     // '/term/...' - Create new term
     api.post('/create/:teacherId', authenticate, (req, res) => {
@@ -34,7 +34,7 @@ export default ({config, db}) => {
                 });
             });
         })
-    });
+    })
 
     // Get term by id
     api.get('/:termId', (req, res) => {
@@ -50,8 +50,32 @@ export default ({config, db}) => {
                 res.json(term);
             }
         });
-    });
+    })
 
+    // Update term basic info
+    api.patch('/update/:termId', authenticate, (req, res) => {
+        SchoolTerm.findById(req.params.termId, (err, term) => {
+            if (err) {
+                res.send(err)
+            }
+            if (req.body.termTitle !== undefined) {
+                term.termTitle = req.body.termTitle
+            }
+            if (req.body.termStart !== undefined) {
+                term.termStart = req.body.termStart
+            }
+            if (req.body.termEnd !== undefined) {
+                term.termEnd = req.body.termEnd
+            }
+
+            term.save(err => {
+                if (err) {
+                    res.send(err)
+                }
+                res.json({message: 'term info updated successfully'})
+            })
+        })
+    })
 
     // Delete term
     api.delete('/remove/:termId', authenticate, (req, res) => {
