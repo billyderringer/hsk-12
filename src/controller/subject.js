@@ -2,8 +2,7 @@ import {Router} from 'express'
 import Student from '../model/student'
 import Subject from '../model/subject'
 import { authenticate } from '../middleware/authMiddleware'
-import Assignment from "../model/assignment";
-import SchoolTerm from "../model/schoolTerm";
+import Assignment from "../model/assignment"
 
 export default ({config, db}) => {
     let api = Router();
@@ -33,7 +32,7 @@ export default ({config, db}) => {
                         })
                     });
                 });
-    });
+    })
 
     //Get subject by id
     api.get('/:subjectId', (req, res) => {
@@ -49,7 +48,29 @@ export default ({config, db}) => {
                 res.json(subject);
             }
         });
-    });
+    })
+
+    // Update subject basic info
+    api.patch('/update/:subjectId', authenticate, (req, res) => {
+        Subject.findById(req.params.subjectId, (err, subject) => {
+            if (err) {
+                res.send(err)
+            }
+            if (req.body.title !== undefined) {
+                subject.title = req.body.title
+            }
+            if (req.body.description !== undefined) {
+                subject.description = req.body.description
+            }
+
+            subject.save(err => {
+                if (err) {
+                    res.send(err)
+                }
+                res.json({message: 'subject info updated successfully'})
+            })
+        })
+    })
 
     // Delete subject
     api.delete('/remove/:subjectId', authenticate, (req, res) => {
@@ -88,5 +109,5 @@ export default ({config, db}) => {
         res.json({message: "subject successfully removed"})
     })
 
-    return api;
+    return api
 }

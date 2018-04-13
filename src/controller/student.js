@@ -1,5 +1,4 @@
 import {Router} from 'express'
-import Teacher from '../model/teacher'
 import SchoolTerm from '../model/schoolTerm'
 import Student from '../model/student'
 import { authenticate } from '../middleware/authMiddleware'
@@ -34,7 +33,7 @@ export default ({config, db}) => {
                     })
                 });
             });
-    });
+    })
 
     // Update student basic info
     api.patch('/update/:studentId', authenticate, (req, res) => {
@@ -75,7 +74,7 @@ export default ({config, db}) => {
                 res.json(student);
             }
         });
-    });
+    })
 
     // Delete student
     api.delete('/remove/:studentId', authenticate, (req, res) => {
@@ -123,5 +122,5 @@ export default ({config, db}) => {
         res.json({message: "student successfully removed"})
     })
 
-    return api;
+    return api
 }
