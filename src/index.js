@@ -33,7 +33,7 @@ passport.serializeUser(Teacher.serializeUser())
 passport.deserializeUser(Teacher.deserializeUser())
 
 // api routes
-app.use('/v1/', routes)
+app.use('/api/v1/', routes)
 
 let port = config.port
 app.server.listen(port)
