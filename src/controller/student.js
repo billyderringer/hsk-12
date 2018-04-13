@@ -3,6 +3,8 @@ import Teacher from '../model/teacher'
 import SchoolTerm from '../model/schoolTerm'
 import Student from '../model/student'
 import { authenticate } from '../middleware/authMiddleware'
+import Assignment from "../model/assignment";
+import Subject from "../model/subject";
 
 export default ({config, db}) => {
     let api = Router()
@@ -33,6 +35,68 @@ export default ({config, db}) => {
                 });
             });
     });
+
+    //Get student by id
+    api.get('/:studentId', (req, res) => {
+        Student.findById(req.params.studentId, (err, student) => {
+            console.log(student)
+            if(student === null){
+                res.json('student not found')
+            }
+            else if (err) {
+                res.send(err);
+            }
+            else {
+                res.json(student);
+            }
+        });
+    });
+
+    // Delete student
+    api.delete('/remove/:studentId', authenticate, (req, res) => {
+        let id = req.params.studentId
+
+        Student.findById(id, (err, student) => {
+            console.log(student)
+            if (err) {
+                res.send(err + ' :err finding student by id')
+            }
+            SchoolTerm.find({students: id}, (err, term) => {
+                if (err) {
+                    res.send(err + ' :err finding term by studentId')
+                }
+                term[0].students.pull(student)
+                term[0].save(err => {
+                    if (err) {
+                        res.send(err + ' :err saving term')
+                    }
+                })
+            })
+            Student.remove({_id: req.params.studentId}, err => {
+                if (err) {
+                    res.send(err + ' :err removing Student')
+                }
+                Subject.remove({student: id}, (err, subject) => {
+                    if (err) {
+                        res.send(err+' :err removing subject in student')
+                    }
+                    if (subject === null) {
+                        res.status(404).send("subject not found")
+                    }
+
+                    Assignment.remove({student: id}, (err, assignment) => {
+                        if (err) {
+                            res.send(err+' :err removing assignment in student')
+                        }
+                        if (assignment === null) {
+                            res.status(404).send("assignment not found")
+                        }
+                    })
+                })
+            })
+        })
+        res.json({message: "student successfully removed"})
+    })
 
     return api;
 }

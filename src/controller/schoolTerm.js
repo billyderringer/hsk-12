@@ -36,7 +36,7 @@ export default ({config, db}) => {
         })
     });
 
-
+    // Get term by id
     api.get('/:termId', (req, res) => {
         SchoolTerm.findById(req.params.termId, (err, term) => {
             console.log(term)
