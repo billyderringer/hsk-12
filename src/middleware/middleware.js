@@ -1,7 +1,7 @@
-import {Router} from 'express';
+import {Router} from 'express'
 
 export default ({config, db}) => {
-    let api = Router();
+    let api = Router()
 
-    return api;
+    return api
 }

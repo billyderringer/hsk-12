@@ -1,7 +1,8 @@
 import {Router} from 'express'
+import { authenticate } from '../middleware/authMiddleware'
+
 import Subject from '../model/subject'
 import Assignment from '../model/assignment'
-import { authenticate } from '../middleware/authMiddleware'
 
 export default () => {
     let api = Router()
@@ -34,8 +35,8 @@ export default () => {
                     }
                     res.json({message: 'new assignment saved'})
                 })
-            });
-        });
+            })
+        })
     })
 
     // Get assignments by subjectId
@@ -108,7 +109,6 @@ export default () => {
         let id = req.params.assignmentId
 
         Assignment.findById(id, (err, assignment) => {
-            console.log(assignment)
             if (err) {
                 res.send(err + ' :err finding assignment by id')
             }

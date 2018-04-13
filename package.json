@@ -1,7 +1,7 @@
 {
   "name": "hsk-12",
-  "version": "0.1.0",
-  "description": "Homeschool K-12 Application",
+  "version": "1.0",
+  "description": "Homeschool Hub API",
   "main": "dist",
   "scripts": {
     "dev": "SET NODE_ENV=development & nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",

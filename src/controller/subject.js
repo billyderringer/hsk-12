@@ -1,7 +1,8 @@
 import {Router} from 'express'
+import { authenticate } from '../middleware/authMiddleware'
+
 import Student from '../model/student'
 import Subject from '../model/subject'
-import { authenticate } from '../middleware/authMiddleware'
 import Assignment from "../model/assignment"
 
 export default () => {
@@ -30,8 +31,8 @@ export default () => {
                             }
                             res.json({message: 'new subject saved'})
                         })
-                    });
-                });
+                    })
+                })
     })
 
     // Get subjects by studentId
@@ -92,7 +93,6 @@ export default () => {
         let id = req.params.subjectId
 
         Subject.findById(id, (err, subject) => {
-            console.log(subject)
             if (err) {
                 res.send(err + ' :err finding subject by id')
             }

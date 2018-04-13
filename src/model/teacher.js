@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
-import passportLocalMongoose from 'passport-local-mongoose';
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
+import passportLocalMongoose from 'passport-local-mongoose'
 
 let Teacher = new Schema({
     firstName: {type: String,required: true},
@@ -19,8 +19,13 @@ let Teacher = new Schema({
         type: Schema.ObjectId,
         ref:'SchoolTerm'
     }]
-});
+})
 
-mongoose.plugin(schema => { schema.options.usePushEach = true });
-Teacher.plugin(passportLocalMongoose);
-module.exports = mongoose.model('Teacher', Teacher, 'Teacher');
+//fixes the pushAll error
+mongoose.plugin(schema => {
+    schema.options.usePushEach = true })
+
+//needed for authentication
+Teacher.plugin(passportLocalMongoose)
+
+module.exports = mongoose.model('Teacher', Teacher, 'Teacher')

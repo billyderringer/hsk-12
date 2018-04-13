@@ -1,7 +1,8 @@
 import {Router} from 'express'
+import { authenticate } from '../middleware/authMiddleware'
+
 import SchoolTerm from '../model/schoolTerm'
 import Student from '../model/student'
-import { authenticate } from '../middleware/authMiddleware'
 import Assignment from "../model/assignment"
 import Subject from "../model/subject"
 
@@ -10,29 +11,29 @@ export default () => {
 
     // '/student/...' - Create new student
     api.post('/create/:termId', authenticate, (req, res) => {
-            SchoolTerm.findById(req.params.termId, (err, term) => {
-                if(err){
-                    res.send(err+' :err finding term by id')
+        SchoolTerm.findById(req.params.termId, (err, term) => {
+            if(err){
+                res.send(err+' :err finding term by id')
+            }
+            let newStudent = new Student();
+            newStudent.firstName = req.body.firstName
+            newStudent.lastName = req.body.lastName
+            newStudent.gradeLevel = req.body.gradeLevel
+            newStudent.teacher = term.teacher
+            newStudent.term = term._id
+            newStudent.save(err => {
+                if (err) {
+                    res.send(err+' :err saving new student')
                 }
-                let newStudent = new Student();
-                newStudent.firstName = req.body.firstName
-                newStudent.lastName = req.body.lastName
-                newStudent.gradeLevel = req.body.gradeLevel
-                newStudent.teacher = term.teacher
-                newStudent.term = term._id
-                newStudent.save(err => {
-                    if (err) {
-                        res.send(err+' :err saving new student')
+                term.students.push(newStudent)
+                term.save(err => {
+                    if(err){
+                        res.send(err+' :err saving student to term')
                     }
-                    term.students.push(newStudent)
-                    term.save(err => {
-                        if(err){
-                            res.send(err+' :err saving student to term')
-                        }
-                        res.json({message: 'new student saved'})
-                    })
-                });
-            });
+                    res.json({message: 'new student saved'})
+                })
+            })
+        })
     })
 
     // Update student basic info
@@ -96,7 +97,6 @@ export default () => {
         let id = req.params.studentId
 
         Student.findById(id, (err, student) => {
-            console.log(student)
             if (err) {
                 res.send(err + ' :err finding student by id')
             }

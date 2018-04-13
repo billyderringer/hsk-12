@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
 
 let SubjectSchema = new Schema({
     title: {type: String, required: true},
@@ -20,7 +20,11 @@ let SubjectSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'Assignment'
     }]
-});
+})
 
-mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('Subject', SubjectSchema, 'Subject');
+//fixes the pushAll error
+mongoose.plugin(schema => {
+    schema.options.usePushEach = true })
+
+module.exports = mongoose.model('Subject',
+    SubjectSchema, 'Subject')

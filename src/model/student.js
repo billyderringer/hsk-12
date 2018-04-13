@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
 
 let StudentSchema = new Schema({
     firstName: {type: String, required: true},
@@ -17,7 +17,11 @@ let StudentSchema = new Schema({
         type: Schema.ObjectId,
         ref:'Subject'
     }]
-});
+})
 
-mongoose.plugin(schema => { schema.options.usePushEach = true });
-module.exports = mongoose.model('Student', StudentSchema, 'Student');
+//fixes the pushAll error
+mongoose.plugin(schema => {
+    schema.options.usePushEach = true })
+
+module.exports = mongoose.model('Student',
+    StudentSchema, 'Student')

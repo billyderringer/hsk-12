@@ -1,10 +1,11 @@
 import {Router} from 'express'
+import { authenticate } from '../middleware/authMiddleware'
+
 import Teacher from '../model/teacher'
 import SchoolTerm from '../model/schoolTerm'
 import Assignment from "../model/assignment"
 import Student from "../model/student"
 import Subject from "../model/subject"
-import { authenticate } from '../middleware/authMiddleware'
 
 export default () => {
     let api = Router()
@@ -15,30 +16,29 @@ export default () => {
             if (err) {
                 res.send(err);
             }
-            let newTerm = new SchoolTerm();
-            newTerm.termTitle = req.body.termTitle;
-            newTerm.termStart = req.body.termStart;
-            newTerm.termEnd = req.body.termEnd;
-            newTerm.teacher = teacher._id;
+            let newTerm = new SchoolTerm()
+            newTerm.termTitle = req.body.termTitle
+            newTerm.termStart = req.body.termStart
+            newTerm.termEnd = req.body.termEnd
+            newTerm.teacher = teacher._id
             newTerm.save(err => {
                 if (err) {
-                    res.send(err+' :err saving new term');
+                    res.send(err+' :err saving new term')
                 }
-                teacher.terms.push(newTerm);
+                teacher.terms.push(newTerm)
                 teacher.save(err => {
                     if (err) {
-                        res.send(err+' :err saving term to teacher');
+                        res.send(err+' :err saving term to teacher')
                     }
-                    res.json({message: 'new term saved'});
-                });
-            });
+                    res.json({message: 'new term saved'})
+                })
+            })
         })
     })
 
     // Get terms by teacherId
     api.get('/teacher/:teacherId', (req, res) => {
         SchoolTerm.find({teacher: req.params.teacherId}, (err, terms) => {
-            console.log(terms)
             if(terms === null){
                 res.json('terms not found')
             }
@@ -54,7 +54,6 @@ export default () => {
     // Get term by id
     api.get('/:termId', (req, res) => {
         SchoolTerm.findById(req.params.termId, (err, term) => {
-            console.log(term)
             if(term === null){
                 res.json('term not found')
             }
@@ -97,7 +96,6 @@ export default () => {
         let id = req.params.termId
 
         SchoolTerm.findById(id, (err, term) => {
-            console.log(term)
             if (err) {
                 res.send(err + ' :err finding term by id')
             }
