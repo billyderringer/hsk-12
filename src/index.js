@@ -13,13 +13,8 @@ app.server = http.Server(app)
 //app.disable('x-powered-by')
 
 // middleware
-app.use(cors({credentials: true, origin: 'https://billyderringer.github.io/homeschool-hub/'}))
-app.use((req, res, next) => {
-    res.append('Access-Control-Allow-Origin', 'https://billyderringer.github.io/homeschool-hub/')
-    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    res.append('Access-Control-Allow-Headers', 'Content-Type')
-    next()
-})
+app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
+
 //parse application/json
 app.use(bodyParser.json({
     limit: config.bodyLimit
