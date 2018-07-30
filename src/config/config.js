@@ -1,5 +1,5 @@
 export default {
     "port": 8000,
-    "mongoUrl": "mongodb://localhost:27017/hsk-12-api",
+    "mongoUrl": "mongodb://<dbuser>:<dbpassword>@ds031903.mlab.com:31903/heroku_t5267h8q",
     "bodyLimit": "100kb"
 }
