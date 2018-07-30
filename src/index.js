@@ -10,7 +10,7 @@ const LocalStrategy = require('passport-local').Strategy
 
 let app = express()
 app.server = http.Server(app)
-app.disable('x-powered-by')
+//app.disable('x-powered-by')
 
 // middleware
 app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com'}))
