@@ -10,6 +10,13 @@ import Subject from "../model/subject"
 export default () => {
     let api = Router()
 
+    api.use((req, res, next) => {
+        res.append('Access-Control-Allow-Origin', ['*'])
+        res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+        res.append('Access-Control-Allow-Headers', 'Content-Type')
+        next()
+    })
+
     // '/term/...' - Create new term
     api.post('/create/:teacherId', authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
