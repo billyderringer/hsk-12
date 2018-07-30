@@ -5,10 +5,10 @@
   "main": "dist",
   "scripts": {
     "dev": "SET NODE_ENV=development nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
-    "build": "babel src -s -D -d dist --exec \"babel-node src --presets env\" && npm run open:dist",
+    "build": "babel src -s -D -d dist --exec \"babel-node src --presets env\"",
     "start": "NODE_ENV=production",
     "heroku-prebuild": "",
-    "heroku-postbuild": "babel build",
+    "heroku-postbuild": "npm run -s build",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
