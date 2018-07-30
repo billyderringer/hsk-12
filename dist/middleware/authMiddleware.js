@@ -12,6 +12,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var TOKENTIME = 60 * 60 * 24 * 30; //30 days
 var SECRET = '1hav3s3cretsth4ty0uc4ntgues$';
+var username = "";
+var password = "";
 
 var authenticate = (0, _expressJwt2.default)({ secret: SECRET });
 // next parameter is a sign of middleware
@@ -26,6 +28,8 @@ var generateAccessToken = function generateAccessToken(req, res, next) {
 };
 
 var respond = function respond(req, res) {
+    username = req.user.username;
+    password = req.token;
     res.status(200).json({
         user: req.user.username,
         token: req.token
@@ -35,6 +39,8 @@ var respond = function respond(req, res) {
 module.exports = {
     authenticate: authenticate,
     generateAccessToken: generateAccessToken,
-    respond: respond
+    respond: respond,
+    username: username,
+    password: password
 };
 //# sourceMappingURL=authMiddleware.js.map

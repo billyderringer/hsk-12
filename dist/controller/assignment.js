@@ -21,6 +21,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = function () {
     var api = (0, _express.Router)();
 
+    api.use(function (req, res, next) {
+        res.append('Access-Control-Allow-Origin', ['*']);
+        res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.append('Access-Control-Allow-Headers', 'Content-Type');
+        next();
+    });
+
     // '/assignment/...' Create new assignment
     api.post('/create/:subjectId', _authMiddleware.authenticate, function (req, res) {
         _subject2.default.findById(req.params.subjectId, function (err, subject) {

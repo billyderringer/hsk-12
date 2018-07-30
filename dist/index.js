@@ -38,10 +38,11 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var app = (0, _express2.default)();
 app.server = _http2.default.Server(app);
-app.disable('x-powered-by');
+//app.disable('x-powered-by')
 
 // middleware
-app.use((0, _cors2.default)({ credentials: true, origin: 'http://localhost:3000' }));
+//app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
+//app.options('https://billyderringer.github.io', cors())
 
 //parse application/json
 app.use(_bodyParser2.default.json({

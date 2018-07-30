@@ -37,6 +37,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = function () {
     var api = (0, _express.Router)();
 
+    api.use(function (req, res, next) {
+        res.append('Access-Control-Allow-Origin', ['*']);
+        res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.append('Access-Control-Allow-Headers', 'Content-Type');
+        next();
+    });
+
     // '/teacher/...' - Register new account
     api.post('/register', function (req, res) {
         _teacher2.default.register(new _teacher2.default({
