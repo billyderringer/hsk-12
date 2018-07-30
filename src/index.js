@@ -14,7 +14,12 @@ app.server = http.Server(app)
 
 // middleware
 //app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com/api/v1'}))
-app.use(cors())
+app.use((req, res, next) => {
+    res.append('Access-Control-Allow-Origin', ['*'])
+    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.append('Access-Control-Allow-Headers', 'Content-Type')
+    next()
+})
 //parse application/json
 app.use(bodyParser.json({
     limit: config.bodyLimit
