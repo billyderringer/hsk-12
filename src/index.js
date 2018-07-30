@@ -13,9 +13,9 @@ app.server = http.Server(app)
 //app.disable('x-powered-by')
 
 // middleware
-//app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com/api/v1'}))
+app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com/api/v1'}))
 app.use((req, res, next) => {
-    res.append('Access-Control-Allow-Origin', ['*'])
+    res.append('Access-Control-Allow-Origin', 'https://hsk-12.herokuapp.com/api/v1')
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     res.append('Access-Control-Allow-Headers', 'Content-Type')
     next()
