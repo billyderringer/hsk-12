@@ -4,7 +4,9 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
 
 var Schema = _mongoose2.default.Schema;
 
@@ -33,3 +35,4 @@ var TeacherSchema = new Schema({
 
 module.exports = _mongoose2.default.model('Teacher', TeacherSchema);
 //# sourceMappingURL=teacher.js.map
+//# sourceMappingURL=teacherModel.js.map

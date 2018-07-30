@@ -26,7 +26,9 @@ var _studentModel = require('../model/studentModel');
 
 var _studentModel2 = _interopRequireDefault(_studentModel);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
 
 exports.default = function (_ref) {
     var config = _ref.config,
@@ -69,3 +71,4 @@ exports.default = function (_ref) {
     return api;
 };
 //# sourceMappingURL=student.js.map
+//# sourceMappingURL=studentController.js.map

@@ -26,7 +26,9 @@ var _student = require('../model/student');
 
 var _student2 = _interopRequireDefault(_student);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
 
 exports.default = function (_ref) {
     var config = _ref.config,
@@ -143,4 +145,5 @@ exports.default = function (_ref) {
 
     return api;
 };
+//# sourceMappingURL=homeroom.js.map
 //# sourceMappingURL=homeroom.js.map
