@@ -28,14 +28,20 @@ var _cors = require('cors');
 
 var _cors2 = _interopRequireDefault(_cors);
 
+var _passport = require('passport');
+
+var _passport2 = _interopRequireDefault(_passport);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = (0, _express2.default)();
 app.server = _http2.default.Server(app);
 app.disable('x-powered-by');
 
 // middleware
-app.use((0, _cors2.default)({ origin: '*' }));
+app.use((0, _cors2.default)({ credentials: true, origin: 'http://localhost:3000' }));
 
 //parse application/json
 app.use(_bodyParser2.default.json({
@@ -43,9 +49,17 @@ app.use(_bodyParser2.default.json({
 }));
 
 // passport config
+app.use(_passport2.default.initialize());
+var Teacher = require('./model/teacher');
+_passport2.default.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+}, Teacher.authenticate()));
+_passport2.default.serializeUser(Teacher.serializeUser());
+_passport2.default.deserializeUser(Teacher.deserializeUser());
 
 // api routes
-app.use('/v1/', _routes2.default);
+app.use('/api/v1/', _routes2.default);
 
 var port = _config2.default.port;
 app.server.listen(port);

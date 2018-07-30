@@ -19,7 +19,8 @@ export default () => {
             lastName: req.body.lastName
         }), req.body.password, err => {
             if (err) {
-                res.send(err);
+                console.log(err)
+                res.status(401).send('unauthorized');
             }
             passport.authenticate(
                 'local', {

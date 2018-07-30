@@ -1,6 +1,5 @@
 import {Router} from 'express'
 import { authenticate } from '../middleware/authMiddleware'
-
 import Subject from '../model/subject'
 import Assignment from '../model/assignment'
 

@@ -1,6 +1,6 @@
 {
   "name": "hsk-12",
-  "version": "1.0",
+  "version": "0.1.0",
   "description": "Homeschool Hub API",
   "main": "dist",
   "scripts": {
@@ -43,7 +43,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.3",
+    "babel-eslint": "^7.2.3",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.13.0",

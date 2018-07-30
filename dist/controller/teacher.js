@@ -4,27 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
 var _express = require('express');
-
-var _hub = require('../model/hub');
-
-var _hub2 = _interopRequireDefault(_hub);
-
-var _homeroom = require('../model/homeroom');
-
-var _homeroom2 = _interopRequireDefault(_homeroom);
-
-var _teacher = require('../model/teacher');
-
-var _teacher2 = _interopRequireDefault(_teacher);
-
-var _student = require('../model/student');
-
-var _student2 = _interopRequireDefault(_student);
 
 var _passport = require('passport');
 
@@ -32,22 +12,41 @@ var _passport2 = _interopRequireDefault(_passport);
 
 var _authMiddleware = require('../middleware/authMiddleware');
 
+var _teacher = require('../model/teacher');
+
+var _teacher2 = _interopRequireDefault(_teacher);
+
+var _schoolTerm = require('../model/schoolTerm');
+
+var _schoolTerm2 = _interopRequireDefault(_schoolTerm);
+
+var _student = require('../model/student');
+
+var _student2 = _interopRequireDefault(_student);
+
+var _subject = require('../model/subject');
+
+var _subject2 = _interopRequireDefault(_subject);
+
+var _assignment = require('../model/assignment');
+
+var _assignment2 = _interopRequireDefault(_assignment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (_ref) {
-    var config = _ref.config,
-        db = _ref.db;
-
+exports.default = function () {
     var api = (0, _express.Router)();
-    var teacherCount = 0;
 
-    // '/teacher/register' - Create new teachers
+    // '/teacher/...' - Register new account
     api.post('/register', function (req, res) {
         _teacher2.default.register(new _teacher2.default({
-            username: req.body.email
-        }), req.body.password, function (err, teacher) {
+            username: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName
+        }), req.body.password, function (err) {
             if (err) {
-                res.send(err);
+                console.log(err);
+                res.status(401).send('unauthorized');
             }
             _passport2.default.authenticate('local', {
                 session: false
@@ -57,108 +56,39 @@ exports.default = function (_ref) {
         });
     });
 
+    // Login
     api.post('/login', _passport2.default.authenticate('local', {
         session: false,
         scope: []
     }), _authMiddleware.generateAccessToken, _authMiddleware.respond);
 
-    // 'v1/account/logout' - Logout
+    // Logout
     api.get('/logout', _authMiddleware.authenticate, function (req, res) {
         res.logout();
         res.status(200).send('Successfully logged out');
     });
 
+    // Get info about account
     api.get('/me', _authMiddleware.authenticate, function (req, res) {
         res.status(200).json(req.user);
     });
 
-    // '/teacher/:roomId' - Create new teachers
-    api.post('/:roomId', function (req, res) {
-        _homeroom2.default.findById(req.params.roomId, function (err, homeroom) {
-            if (err) {
-                res.send(err);
-            }
-            var newTeacher = new _teacher2.default();
-            newTeacher.firstName = req.body.firstName;
-            newTeacher.lastName = req.body.lastName;
-            newTeacher.homerooms = req.params.roomId;
-            newTeacher.hub = homeroom.hub;
-            _hub2.default.findById(newTeacher.hub, function (err, hub) {
-                if (err) {
-                    res.send(err);
-                }
-                hub.teachers.push(newTeacher);
-                hub.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-            });
-            newTeacher.save(function (err, teacher) {
-                if (err) {
-                    res.send(err);
-                }
-                homeroom.teachers.push(newTeacher);
-                homeroom.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-                teacher.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    teacherCount++;
-                    res.json({ message: 'Teacher: ' + newTeacher.firstName + ' ' + newTeacher.lastName + ' successfully added to ' + homeroom.roomName });
-                });
-            });
-        });
-    });
-
-    // '/teacher' - Read all teachers
-    api.get('/', function (req, res) {
-        _teacher2.default.find({}, function (err, teachers) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(teachers);
-        });
-    });
-
-    // '/teacher/:roomId' - Read all teachers by classId
-    api.get('/:roomId', function (req, res) {
-        var id = req.params.roomId;
-        _teacher2.default.find({ homerooms: id }, function (err, teachers) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(teachers);
-        });
-    });
-
-    // '/teacher/:teacherId/students' - Read students by teacherId
-    api.get('/:teacherId/students', function (req, res) {
-        var id = req.params.teacherId;
-        _teacher2.default.find({ students: id }, function (err, students) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(students);
-        });
-    });
-
-    // '/teacher/:teacherId' - Read teacher by teacherId
-    api.get('/:teacherId', function (req, res) {
+    // Get teacher by teacherId
+    api.get('/:teacherId', _authMiddleware.authenticate, function (req, res) {
         _teacher2.default.findById(req.params.teacherId, function (err, teacher) {
-            if (err) {
+            if (teacher === null) {
+                res.json('teacher not found');
+            } else if (err) {
                 res.send(err);
+            } else {
+                res.json(teacher);
             }
-            res.json(teacher);
         });
     });
 
-    // '/teacher/:id' - Update teacher basic info
-    api.patch('/update/:teacherId', function (req, res) {
+    // Update teacher basic info
+    // email will be unchangeable as it will be username
+    api.patch('/update/:teacherId', _authMiddleware.authenticate, function (req, res) {
         _teacher2.default.findById(req.params.teacherId, function (err, teacher) {
             if (err) {
                 res.send(err);
@@ -169,80 +99,104 @@ exports.default = function (_ref) {
             if (req.body.lastName !== undefined) {
                 teacher.lastName = req.body.lastName;
             }
+            if (req.body.password !== undefined) {
+                teacher.password = req.body.password;
+            }
+            if (req.body.streetAddress !== undefined) {
+                teacher.streetAddress = req.body.streetAddress;
+            }
+            if (req.body.usState !== undefined) {
+                teacher.usState = req.body.usState;
+            }
+            if (req.body.zipCode !== undefined) {
+                teacher.zipCode = req.body.zipCode;
+            }
+            if (req.body.phonePrimary !== undefined) {
+                teacher.phonePrimary = req.body.phonePrimary;
+            }
+            if (req.body.phoneSecondary !== undefined) {
+                teacher.phoneSecondary = req.body.phoneSecondary;
+            }
+            if (req.body.personalDescription !== undefined) {
+                teacher.personalDescription = req.body.personalDescription;
+            }
+            if (req.body.avatar !== undefined) {
+                teacher.avatar = req.body.avatar;
+            }
+            if (req.body.homeroomName !== undefined) {
+                teacher.homeroomName = req.body.homeroomName;
+            }
+
             teacher.save(function (err) {
                 if (err) {
                     res.send(err);
                 }
-                res.json({ message: teacher.firstName + ' ' + teacher.lastName + ': Info updated successfully' });
+                res.json({ message: 'teacher info updated successfully' });
             });
         });
     });
 
-    // '/teacher/:teacherId/assign/:studentId' - Assign students to teacher
-    api.post('/:teacherId/assign/:studentId', function (req, res) {
-        _teacher2.default.findById(req.params.teacherId, function (err, teacher) {
-            var teacherName = teacher.firstName + ' ' + teacher.lastName;
+    // Delete teacher
+    api.delete('/remove/:teacherId', _authMiddleware.authenticate, function (req, res) {
+        _teacher2.default.find({ _id: req.params.teacherId }, function (err) {
             if (err) {
-                res.send(err);
+                res.send(err + ' :err finding teacher by id');
             }
-            _student2.default.findById(req.params.studentId, function (err, student) {
-                var studentName = student.firstName + ' ' + student.lastName;
+            var id = req.params.teacherId;
+            _schoolTerm2.default.find({ teacher: id }, function (err, term) {
                 if (err) {
-                    res.send(err);
+                    res.send(err + ' :err finding term in teacher');
                 }
-                teacher.students.push(student);
-                teacher.save(function (err) {
+                if (term === null) {
+                    res.status(404).send("term not found");
+                }
+                _student2.default.find({ teacher: id }, function (err, student) {
                     if (err) {
-                        res.send(err);
+                        res.send(err + ' :err finding student in term');
+                    }
+                    if (student === null) {
+                        res.status(404).send("student not found");
+                    }
+                    _subject2.default.find({ teacher: id }, function (err, subject) {
+                        if (err) {
+                            res.send(err + ' :err finding subject in student');
+                        }
+                        if (subject === null) {
+                            res.status(404).send("subject not found");
+                        }
+                        _assignment2.default.find({ teacher: id }, function (err, assignment) {
+                            if (err) {
+                                res.send(err + ' :err finding assignment in subject');
+                            }
+                            if (assignment === null) {
+                                res.status(404).send("assignment not found");
+                            }
+                        }).remove(function (err) {
+                            if (err) {
+                                res.send(err + ' :err removing assignment');
+                            }
+                        });
+                    }).remove(function (err) {
+                        if (err) {
+                            res.send(err + ' :err removing subject');
+                        }
+                    });
+                }).remove(function (err) {
+                    if (err) {
+                        res.send(err + ' :err removing student');
                     }
                 });
-                student.teachers.push(teacher);
-                student.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-                res.json({ message: studentName + ' successfully assigned to ' + teacherName });
+            }).remove(function (err) {
+                if (err) {
+                    res.send(err + ' :err removing term');
+                }
             });
-        });
-    });
-
-    // '/teacher/:teacherId' - Delete teacher
-    api.delete('/remove/:teacherId', function (req, res) {
-        _teacher2.default.findById(req.params.teacherId, function (err, teacher) {
+        }).remove(function (err) {
             if (err) {
-                res.send(err);
+                res.send(err + ' :err removing teacher');
             }
-            _hub2.default.findById(teacher.hub, function (err, hub) {
-                if (err) {
-                    res.send(err);
-                }
-                hub.teachers.pull(teacher);
-                hub.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-            });
-            _homeroom2.default.findById(teacher.homerooms, function (err, homeroom) {
-                if (err) {
-                    res.send(err);
-                }
-                homeroom.teachers.pull(teacher);
-                homeroom.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-            });
-
-            _teacher2.default.remove(teacher, function (err) {
-                if (err) {
-                    res.send(err);
-                }
-                res.json({ message: "Teacher successfully removed" });
-            });
         });
+        res.json({ message: "teacher successfully removed" });
     });
 
     return api;

@@ -4,124 +4,60 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
 var _express = require('express');
 
-var _hub = require('../model/hub');
+var _authMiddleware = require('../middleware/authMiddleware');
 
-var _hub2 = _interopRequireDefault(_hub);
+var _schoolTerm = require('../model/schoolTerm');
 
-var _homeroom = require('../model/homeroom');
-
-var _homeroom2 = _interopRequireDefault(_homeroom);
-
-var _teacher = require('../model/teacher');
-
-var _teacher2 = _interopRequireDefault(_teacher);
+var _schoolTerm2 = _interopRequireDefault(_schoolTerm);
 
 var _student = require('../model/student');
 
 var _student2 = _interopRequireDefault(_student);
 
+var _assignment = require('../model/assignment');
+
+var _assignment2 = _interopRequireDefault(_assignment);
+
+var _subject = require('../model/subject');
+
+var _subject2 = _interopRequireDefault(_subject);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (_ref) {
-    var config = _ref.config,
-        db = _ref.db;
-
+exports.default = function () {
     var api = (0, _express.Router)();
 
-    // '/student/:roomId' - Create new students
-    api.post('/:roomId', function (req, res) {
-        _homeroom2.default.findById(req.params.roomId, function (err, homeroom) {
+    // '/student/...' - Create new student
+    api.post('/create/:termId', _authMiddleware.authenticate, function (req, res) {
+        _schoolTerm2.default.findById(req.params.termId, function (err, term) {
             if (err) {
-                res.send(err);
+                res.send(err + ' :err finding term by id');
             }
             var newStudent = new _student2.default();
             newStudent.firstName = req.body.firstName;
             newStudent.lastName = req.body.lastName;
             newStudent.gradeLevel = req.body.gradeLevel;
-            newStudent.homerooms = homeroom._id;
-            newStudent.hub = homeroom.hub;
-            var name = newStudent.firstName + ' ' + newStudent.lastName;
-            _hub2.default.findById(newStudent.hub, function (err, hub) {
+            newStudent.teacher = term.teacher;
+            newStudent.term = term._id;
+            newStudent.save(function (err) {
                 if (err) {
-                    res.send(err);
+                    res.send(err + ' :err saving new student');
                 }
-                hub.students.push(newStudent);
-                hub.save(function (err) {
+                term.students.push(newStudent);
+                term.save(function (err) {
                     if (err) {
-                        res.send(err);
+                        res.send(err + ' :err saving student to term');
                     }
-                });
-            });
-            newStudent.save(function (err, student) {
-                if (err) {
-                    res.send(err);
-                }
-                homeroom.students.push(newStudent);
-                homeroom.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                });
-                student.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    res.json({ message: 'Student: ' + name + ' successfully saved to ' + homeroom.roomName });
+                    res.json({ message: 'new student saved' });
                 });
             });
         });
     });
 
-    // '/student/' - Read all students
-    api.get('/', function (req, res) {
-        _student2.default.find({}, function (err, students) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(students);
-        });
-    });
-
-    // '/student/:roomId' - Read students by roomId
-    api.get('/:roomId', function (req, res) {
-        var id = req.params.roomId;
-        _student2.default.find({ homerooms: id }, function (err, students) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(students);
-        });
-    });
-
-    // '/student/:studentId/teachers' - Read teachers by studentId
-    api.get('/:studentId/teachers', function (req, res) {
-        var id = req.params.studentId;
-        _student2.default.find({ teachers: id }, function (err, teachers) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(teachers);
-        });
-    });
-
-    // '/student/:studentId' - Read student by studentId
-    api.get('/:studentId', function (req, res) {
-        _student2.default.findById(req.params.studentId, function (err, student) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(student);
-        });
-    });
-
-    // '/student/:studentId' - Update student basic info
-    api.patch('/:studentId', function (req, res) {
+    // Update student basic info
+    api.patch('/update/:studentId', _authMiddleware.authenticate, function (req, res) {
         _student2.default.findById(req.params.studentId, function (err, student) {
             if (err) {
                 res.send(err);
@@ -135,52 +71,86 @@ exports.default = function (_ref) {
             if (req.body.gradeLevel !== undefined) {
                 student.gradeLevel = req.body.gradeLevel;
             }
+
             student.save(function (err) {
                 if (err) {
                     res.send(err);
                 }
-                res.json({ message: student.firstName + ' ' + student.lastName + ': Info updated successfully' });
+                res.json({ message: 'student info updated successfully' });
             });
         });
     });
 
-    // '/:studentId' - Delete student
-    api.delete('/remove/:studentId', function (req, res) {
-        var id = req.params.studentId;
-        _student2.default.findById(req.params.studentId, function (err, student) {
-
-            if (err) {
+    // Get students by termId
+    api.get('/term/:termId', function (req, res) {
+        _student2.default.find({ term: req.params.termId }, function (err, students) {
+            if (students === null) {
+                res.json('students not found');
+            } else if (err) {
                 res.send(err);
+            } else {
+                res.json(students);
             }
-            _hub2.default.findById(student.hub, function (err, hub) {
+        });
+    });
+
+    //Get student by id
+    api.get('/:studentId', function (req, res) {
+        _student2.default.findById(req.params.studentId, function (err, student) {
+            console.log(student);
+            if (student === null) {
+                res.json('student not found');
+            } else if (err) {
+                res.send(err);
+            } else {
+                res.json(student);
+            }
+        });
+    });
+
+    // Delete student
+    api.delete('/remove/:studentId', _authMiddleware.authenticate, function (req, res) {
+        var id = req.params.studentId;
+
+        _student2.default.findById(id, function (err, student) {
+            if (err) {
+                res.send(err + ' :err finding student by id');
+            }
+            _schoolTerm2.default.find({ students: id }, function (err, term) {
                 if (err) {
-                    res.send(err);
+                    res.send(err + ' :err finding term by studentId');
                 }
-                hub.students.pull(student);
-                hub.save(function (err) {
+                term[0].students.pull(student);
+                term[0].save(function (err) {
                     if (err) {
-                        res.send(err);
+                        res.send(err + ' :err saving term');
                     }
                 });
             });
-            _homeroom2.default.findById(student.homerooms, function (err, room) {
+            _student2.default.remove({ _id: req.params.studentId }, function (err) {
                 if (err) {
-                    res.send(err);
+                    res.send(err + ' :err removing Student');
                 }
-                room.students.pull(student);
-                room.save(function (err) {
+                _subject2.default.remove({ student: id }, function (err, subject) {
                     if (err) {
-                        res.send(err);
+                        res.send(err + ' :err removing subject in student');
                     }
+                    if (subject === null) {
+                        res.status(404).send("subject not found");
+                    }
+
+                    _assignment2.default.remove({ student: id }, function (err, assignment) {
+                        if (err) {
+                            res.send(err + ' :err removing assignment in student');
+                        }
+                        if (assignment === null) {
+                            res.status(404).send("assignment not found");
+                        }
+                    });
                 });
-            });
-            _student2.default.remove(student, function (err) {
-                if (err) {
-                    res.send(err);
-                }
-                res.json({ message: "Student successfully removed" });
             });
         });
+        res.json({ message: "student successfully removed" });
     });
 
     return api;

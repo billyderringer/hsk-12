@@ -1,0 +1,52 @@
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
+
+let AssignmentSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        default: "None"
+    },
+    assignmentType: {
+        type: String,
+        default: "General"
+    },
+    correctAnswers: {
+        type: Number,
+        default: 0
+    },
+    incorrectAnswers: {
+        type: Number,
+        default: 0
+    },
+    grade: {
+        type: Number,
+        default: 0
+    },
+    teacher: {
+        type: Schema.ObjectId,
+        ref: 'Teacher'
+    },
+    term: {
+        type: Schema.ObjectId,
+        ref: 'SchoolTerm'
+    },
+    student: {
+        type: Schema.ObjectId,
+        ref: 'Student'
+    },
+    subject: {
+        type: Schema.ObjectId,
+        ref: "Subject"
+    }
+})
+
+//fixes the pushAll error
+mongoose.plugin(schema => {
+    schema.options.usePushEach = true })
+
+module.exports = mongoose.model(
+    'Assignment', AssignmentSchema, 'Assignment')

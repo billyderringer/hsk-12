@@ -8,21 +8,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 
-var StudentSchema = new Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    gradeLevel: Number,
+var SchoolTermSchema = new Schema({
+    termTitle: String,
+    termStart: Date,
+    termEnd: Date,
     teacher: {
         type: Schema.ObjectId,
         ref: 'Teacher'
     },
-    term: {
+    students: [{
         type: Schema.ObjectId,
-        ref: 'SchoolTerm'
-    },
-    subjects: [{
-        type: Schema.ObjectId,
-        ref: 'Subject'
+        ref: 'Student'
     }]
 });
 
@@ -31,5 +27,5 @@ _mongoose2.default.plugin(function (schema) {
     schema.options.usePushEach = true;
 });
 
-module.exports = _mongoose2.default.model('Student', StudentSchema, 'Student');
-//# sourceMappingURL=student.js.map
+module.exports = _mongoose2.default.model('SchoolTerm', SchoolTermSchema, 'SchoolTerm');
+//# sourceMappingURL=schoolTerm.js.map

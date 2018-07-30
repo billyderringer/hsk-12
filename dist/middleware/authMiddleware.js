@@ -11,7 +11,7 @@ var _expressJwt2 = _interopRequireDefault(_expressJwt);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TOKENTIME = 60 * 60 * 24 * 30; //30 days
-var SECRET = 'I hav3 s3crets';
+var SECRET = '1hav3s3cretsth4ty0uc4ntgues$';
 
 var authenticate = (0, _expressJwt2.default)({ secret: SECRET });
 // next parameter is a sign of middleware

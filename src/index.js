@@ -13,7 +13,7 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-app.use(cors({origin: '*'}))
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 
 //parse application/json
 app.use(bodyParser.json({
