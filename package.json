@@ -8,7 +8,7 @@
     "build": "babel src -s -D -d dist --exec \"babel-node src --presets env\" && npm run open:dist",
     "start": "NODE_ENV=production",
     "heroku-prebuild": "",
-    "heroku-postbuild": "babel npm run -s build",
+    "heroku-postbuild": "babel build",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
