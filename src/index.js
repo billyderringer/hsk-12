@@ -13,8 +13,8 @@ app.server = http.Server(app)
 //app.disable('x-powered-by')
 
 // middleware
-app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com/api/v1'}))
-
+//app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com/api/v1'}))
+app.use(cors())
 //parse application/json
 app.use(bodyParser.json({
     limit: config.bodyLimit
