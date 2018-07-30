@@ -1,7 +1,7 @@
 import authMiddleware from '../middleware/authMiddleware'
 
 export default {
-    "port": "https://hsk-12.herokuapp.com",
+    "port": "process.env.PORT || 3000",
     "mongoUrl": "mongodb://" +
         authMiddleware.username + ":" +
         authMiddleware.password +
