@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import config from './config/config'
 import routes from './routes/routes'
-import cors from 'cors'
+//import cors from 'cors'
 import passport from 'passport'
 
 const LocalStrategy = require('passport-local').Strategy
@@ -13,7 +13,7 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com'}))
+//app.use(cors({credentials: true, origin: 'https://hsk-12.herokuapp.com'}))
 
 //parse application/json
 app.use(bodyParser.json({
