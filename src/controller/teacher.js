@@ -15,6 +15,8 @@ export default () => {
         optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
+    api.setHeader("Access-Control-Allow-Origin", "*")
+
     // '/teacher/...' - Register new account
     api.post('/register', cors(corsOptions), (req, res) => {
         Teacher.register(new Teacher({
