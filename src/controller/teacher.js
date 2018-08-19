@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import passport from 'passport'
 import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware'
-
+import cors from 'cors'
 import Teacher from '../model/teacher'
 import SchoolTerm from '../model/schoolTerm'
 import Student from '../model/student'
@@ -10,9 +10,13 @@ import Assignment from '../model/assignment'
 
 export default () => {
     let api = Router()
+    let corsOptions = {
+        origin: 'https://billyderringer.github.io',
+        optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    }
 
     // '/teacher/...' - Register new account
-    api.post('/register', (req, res) => {
+    api.post('/register', cors(corsOptions), (req, res) => {
         Teacher.register(new Teacher({
             username: req.body.email,
             firstName: req.body.firstName,
@@ -32,7 +36,7 @@ export default () => {
     })
 
     // Login
-    api.post('/login', passport.authenticate(
+    api.post('/login', cors(corsOptions), passport.authenticate(
         'local', {
             session: false,
             scope: []
@@ -46,12 +50,12 @@ export default () => {
     })
 
     // Get info about account
-    api.get('/me', authenticate, (req, res) => {
+    api.get('/me', cors(corsOptions), authenticate, (req, res) => {
         res.status(200).json(req.user)
     })
 
     // Get teacher by teacherId
-    api.get('/:teacherId', authenticate, (req, res) => {
+    api.get('/:teacherId', cors(corsOptions), authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if(teacher === null){
                 res.json('teacher not found')
@@ -67,7 +71,7 @@ export default () => {
 
     // Update teacher basic info
     // email will be unchangeable as it will be username
-    api.patch('/update/:teacherId', authenticate, (req, res) => {
+    api.patch('/update/:teacherId', cors(corsOptions), authenticate, (req, res) => {
         Teacher.findById(req.params.teacherId, (err, teacher) => {
             if (err) {
                 res.send(err)
@@ -116,7 +120,7 @@ export default () => {
     })
 
     // Delete teacher
-    api.delete('/remove/:teacherId', authenticate, (req, res) => {
+    api.delete('/remove/:teacherId', cors(corsOptions), authenticate, (req, res) => {
         Teacher.find({_id: req.params.teacherId}, err => {
             if (err) {
                 res.send(err+' :err finding teacher by id')
