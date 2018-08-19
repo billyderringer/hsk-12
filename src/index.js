@@ -13,7 +13,7 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-
+app.use(cors())
 //app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
 //app.options('https://billyderringer.github.io', cors())
 

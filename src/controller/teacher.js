@@ -10,7 +10,6 @@ import Assignment from '../model/assignment'
 
 export default () => {
     let api = Router()
-    api.use(cors())
 
     // '/teacher/...' - Register new account
     api.post('/register', (req, res) => {
