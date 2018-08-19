@@ -15,9 +15,9 @@ export default () => {
         optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
-    app.options('/register', "Access-Control-Allow-Origin", "*")
+    api.options('/register', "Access-Control-Allow-Origin", "*")
     // '/teacher/...' - Register new account
-    api.post('/register', cors(), (req, res) => {
+    api.post('/register', (req, res) => {
         Teacher.register(new Teacher({
             username: req.body.email,
             firstName: req.body.firstName,
