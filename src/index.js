@@ -14,8 +14,8 @@ app.disable('x-powered-by')
 
 // middleware
 //app.use(cors({origin: '*'}))
-app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
-app.options('https://billyderringer.github.io', cors())
+//app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
+//app.options('https://billyderringer.github.io', cors())
 
 //parse application/json
 app.use(bodyParser.json({
