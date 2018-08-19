@@ -8,13 +8,6 @@ import Assignment from "../model/assignment"
 export default () => {
     let api = Router()
 
-    api.use((req, res, next) => {
-        res.append('Access-Control-Allow-Origin', ['*'])
-        res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-        res.append('Access-Control-Allow-Headers', 'Content-Type')
-        next()
-    })
-
     // '/subject/...' Create new subject
     api.post('/create/:studentId', authenticate, (req, res) => {
                 Student.findById(req.params.studentId, (err, student) => {

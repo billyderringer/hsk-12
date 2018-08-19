@@ -11,13 +11,6 @@ import Assignment from '../model/assignment'
 export default () => {
     let api = Router()
 
-    api.use((req, res, next) => {
-        res.append('Access-Control-Allow-Origin', ['*'])
-        res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-        res.append('Access-Control-Allow-Headers', 'Content-Type')
-        next()
-    })
-
     // '/teacher/...' - Register new account
     api.post('/register', (req, res) => {
         Teacher.register(new Teacher({

@@ -10,11 +10,10 @@ const LocalStrategy = require('passport-local').Strategy
 
 let app = express()
 app.server = http.Server(app)
-//app.disable('x-powered-by')
+app.disable('x-powered-by')
 
 // middleware
-//app.use(cors({credentials: true, origin: 'https://billyderringer.github.io'}))
-//app.options('https://billyderringer.github.io', cors())
+app.use(cors({origin: '*'}))
 
 //parse application/json
 app.use(bodyParser.json({
