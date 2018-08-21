@@ -14,9 +14,9 @@ app.disable('x-powered-by')
 
 // middleware
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
-    res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
+    req.setHeader("Access-Control-Allow-Origin", "*")
+    req.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
+    req.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
 })
 
 //parse application/json
