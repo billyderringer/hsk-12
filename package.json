@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
-    "server:prod": "dist --cors",
+    "server:prod": "./index --cors",
     "start": "npm run server:prod",
     "prestart": "npm run -s build",
     "lint": "eslint src",
