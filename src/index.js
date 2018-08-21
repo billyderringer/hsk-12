@@ -13,8 +13,14 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-app.use(cors({credentials: true, origin: 'https://billyderringer.github.io/'}))
-app.options('https://billyderringer.github.io/', cors())
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Credentials", "true")
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+    res.setHeader("Access-Control-Allow-Headers",
+        "Access-Control-Allow-Headers, " +
+        "Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
+})
 
 //parse application/json
 app.use(bodyParser.json({
