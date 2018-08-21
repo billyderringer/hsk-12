@@ -13,7 +13,11 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-app.use(function(req,res,next){ req.headers.origin = req.headers.origin || req.headers.host; next() })
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+    res.setHeader("Access-Control-Allow-Headers", "Authorization")
+})
 
 //parse application/json
 app.use(bodyParser.json({
