@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 let StudentSchema = new Schema({

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 import passportLocalMongoose from 'passport-local-mongoose'
 
