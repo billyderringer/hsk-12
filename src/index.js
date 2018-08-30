@@ -3,7 +3,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import config from './config/config'
 import routes from './routes/routes'
-import cors from 'cors'
 import passport from 'passport'
 
 const LocalStrategy = require('passport-local').Strategy
