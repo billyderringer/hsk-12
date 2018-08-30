@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import config from './config/config'
 import routes from './routes/routes'
 import passport from 'passport'
+import cors from 'cors'
 
 const LocalStrategy = require('passport-local').Strategy
 
@@ -12,6 +13,7 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
+app.use(cors())
 
 //parse application/json
 app.use(bodyParser.json({
