@@ -28,25 +28,25 @@
   "author": "Billy Derringer",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
-    "jsonwebtoken": "^8.1.0",
-    "mongoose": "^4.13.6",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^4.13.17",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.4.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-scripts": "1.0.17"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^7.2.3",
     "babel-preset-env": "^1.7.0",
     "eslint": "^4.13.0",
-    "nodemon": "^1.12.5"
+    "nodemon": "^1.18.4"
   }
 }
