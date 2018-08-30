@@ -13,11 +13,6 @@ app.server = http.Server(app)
 app.disable('x-powered-by')
 
 // middleware
-/*app.use((req, res, next) => {
-    req.setHeader("Access-Control-Allow-Origin", "https://billyderringer.github.io")
-    req.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
-    req.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
-})*/
 
 //parse application/json
 app.use(bodyParser.json({
@@ -35,6 +30,13 @@ passport.use(new LocalStrategy({
 ))
 passport.serializeUser(Teacher.serializeUser())
 passport.deserializeUser(Teacher.deserializeUser())
+
+//cors
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next()
+})
 
 // api routes
 app.use('/api/v1/', routes)
