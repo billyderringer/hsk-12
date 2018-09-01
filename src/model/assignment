@@ -14,7 +14,7 @@ let AssignmentSchema = new Schema({
         type: String,
         default: "General"
     },
-    correctAnswers: {
+    questionTotal: {
         type: Number,
         default: 0
     },
